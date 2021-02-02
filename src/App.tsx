@@ -1,8 +1,13 @@
 import React from 'react';
 import './App.css';
+import Root from './presentation/root';
 
-function App() {
-    return <div className="App">PhotoAlbum</div>;
-}
+const App = (): JSX.Element => {
+    return (
+        <div className="App">
+            <Root />
+        </div>
+    );
+};
 
 export default App;

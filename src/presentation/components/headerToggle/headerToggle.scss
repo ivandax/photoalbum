@@ -1,0 +1,18 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+
+.headerToggle{
+    @include flex-complete($direction: row, $justify: flex-start, $align: flex-start);
+    background-color: lightgrey;
+    width: 100%;
+    div{
+        padding: 8px;
+        &:hover{
+            cursor: pointer;
+        }
+    }
+
+    @media only screen and (min-width:$tablet){
+        display: none;
+    }
+}

@@ -1,0 +1,87 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+
+.header{
+    @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
+    width: 250px;
+    height: 100vh;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    transition-duration: 0.4s;
+    z-index: 100;
+    
+    .left, .right{
+        @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
+        width: 100%;
+        h3{
+            padding: 8px;
+        }
+        a{
+            width: 100%;
+            color: black;
+            padding: 16px;
+            &:hover{
+                text-decoration: underline;
+                transition: text-decoration 1s;
+                background-color: lightgrey;
+            }
+        }
+        div{
+            width: 100%;
+            img{
+                width: 70px;
+                margin: 8px;
+            }
+        }
+    }
+
+    @media only screen and (min-width: $tablet){
+        @include flex-complete($direction: row, $justify: space-between, $align: center);
+        width: 100%;
+        height: auto;
+        background-color: $darkblue;
+        position: sticky;
+        top:0;
+
+        h3{
+            padding: 8px;
+            color: white;
+        }
+
+        .left, .right{
+            @include flex-complete($direction: row, $justify: flex-start, $align: center);
+            width: auto;
+            a{
+                color: white;
+                padding: 14px;
+                transition: padding 0.5s;
+                @media only screen and (min-width: $desktop){
+                    padding: 16px;
+                }
+                &:hover{
+                    text-decoration: underline;
+                    transition: text-decoration 0.5s;
+                    background-color: $darkblue;
+                }
+            }
+            div{
+                img{
+                    width: 70px;
+                    margin: 8px;
+                }
+            }
+        }
+    }
+
+}
+
+.header.show{
+    left: 0;
+    transition-duration: 0.4s;
+}
+
+.activeRoute{
+    text-decoration: underline;
+}

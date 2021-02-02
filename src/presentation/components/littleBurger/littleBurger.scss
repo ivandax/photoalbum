@@ -1,0 +1,22 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+
+.littleBurger{
+    @include flex-complete($direction: column, $justify: center, $align: center);
+    width: 40px;
+    height: 40px;
+
+    span{
+        width: 25px;
+        height: 3px;
+        background-color: black;
+
+        &.line2{
+            margin-top:4px;
+        }
+
+        &.line3{
+            margin-top:4px;
+        }
+    }
+}
