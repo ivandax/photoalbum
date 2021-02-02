@@ -41,7 +41,7 @@
         @include flex-complete($direction: row, $justify: space-between, $align: center);
         width: 100%;
         height: auto;
-        background-color: $darkblue;
+        background-color: $primary;
         position: sticky;
         top:0;
 
@@ -63,7 +63,7 @@
                 &:hover{
                     text-decoration: underline;
                     transition: text-decoration 0.5s;
-                    background-color: $darkblue;
+                    background-color: $primary;
                 }
             }
             div{
