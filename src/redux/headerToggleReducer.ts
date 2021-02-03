@@ -14,7 +14,7 @@ export const hideHeader = () => {
   return { type: "hide" };
 };
 
-//STATE AND REDUCEr
+//STATE AND REDUCER
 
 const initialState: HeaderToggleState = { show: false };
 
