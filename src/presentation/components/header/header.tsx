@@ -23,6 +23,9 @@ const Header = () => {
                 </NavLink>
             </div>
             <div className="right">
+                <NavLink to={'/login'} activeClassName="activeRoute">
+                    Login
+                </NavLink>
                 <NavLink to={'/settings'} activeClassName="activeRoute">
                     Settings
                 </NavLink>

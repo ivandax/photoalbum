@@ -13,8 +13,11 @@ async function signup(email: string, password: string) {
         .createUserWithEmailAndPassword(email, password);
     if (createResult) {
         const auth = firebase.auth();
-        if (auth.currentUser !== null) {
-            auth.currentUser.sendEmailVerification();
+        if (auth !== null) {
+            if (auth.currentUser !== null) {
+                auth.currentUser.sendEmailVerification();
+                return auth.currentUser.email
+            }
         }
     }
 }

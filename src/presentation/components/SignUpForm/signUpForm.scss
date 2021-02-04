@@ -1,0 +1,32 @@
+@import '../../../style/mixins.scss';
+@import '../../../style/variables.scss';
+
+.signUpForm{
+    @include flex-complete($direction: column, $justify: flex-start, $align: center);
+    padding-top: 150px;
+
+    h3{
+        padding: 8px;
+    }
+
+    input{
+        padding: 8px;
+        margin: 8px;
+        border-radius: 4px;
+    }
+
+    button{
+        padding: 8px;
+        margin: 4px;
+        border: none;
+        border-radius: 4px;
+        background-color: $primary;
+        color: white;
+    }
+
+    span.message{
+        color: $primary;
+        padding: 4px;
+    }
+
+}
