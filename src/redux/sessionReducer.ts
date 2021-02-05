@@ -27,7 +27,7 @@ export const setValidSession = () => {
 };
 
 export const setUserProfile = (user: UserWithId | null) => {
-    return { type: 'setValidSession', payload: user };
+    return { type: 'setUserProfile', payload: user };
 };
 
 //STATE AND REDUCER
@@ -37,9 +37,9 @@ const initialState: SessionState = { validSession: false, profile: null };
 function sessionReducer(state = initialState, action: SessionAction) {
     switch (action.type) {
         case 'setValidSession':
-            return { validSession: true };
+            return { ...state, validSession: true };
         case 'setUserProfile':
-            return { profile: action.payload };
+            return { ...state, profile: action.payload };
         default:
             return state;
     }

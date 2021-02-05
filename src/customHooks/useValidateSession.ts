@@ -1,16 +1,19 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, } from 'react-redux';
 
 import { addUser, getUser } from '../persistence/users';
 import { registerAuthObserver } from '../persistence/auth';
 
-import { setValidSession, setUserProfile, SessionState } from '../redux/sessionReducer';
+import { setValidSession, setUserProfile } from '../redux/sessionReducer';
 
 function useValidateSession() {
     const dispatch = useDispatch();
 
+    const [resolvedUser, setResolvedUser] = useState(false)
+
     useEffect(() => {
         const cancelObserver = registerAuthObserver(async (user) => {
+            console.log(user);
             if (user !== null) {
                 console.log('auth observer user success...' + user);
                 if (user.emailVerified === true) {
@@ -26,9 +29,12 @@ function useValidateSession() {
                         };
                         await addUser(newProfile, user.uid);
                         dispatch(setUserProfile(newProfile));
+                        dispatch(setValidSession());
+                        setResolvedUser(true);
                     } else {
                         dispatch(setUserProfile(profile));
                         dispatch(setValidSession());
+                        setResolvedUser(true)
                     }
                 } else {
                     dispatch(setUserProfile(null));
@@ -43,9 +49,7 @@ function useValidateSession() {
         };
     }, [dispatch]);
 
-    const session = useSelector((state: SessionState) => state);
-
-    return session.validSession;
+    return resolvedUser;
 }
 
 export default useValidateSession;

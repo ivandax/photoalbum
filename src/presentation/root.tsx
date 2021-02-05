@@ -12,12 +12,13 @@ import HeaderToggle from './components/headerToggle';
 import Overlay from './components/overlay';
 
 ///hooks
-import useValidateSession from "../customHooks/useValidateSession"
+import useValidateSession from '../customHooks/useValidateSession';
 
 const Root: React.FC = () => {
+    const resolvedUser = useValidateSession();
+    console.log(resolvedUser);
 
-    const profile = useValidateSession();
-    console.log(profile);
+    if (!resolvedUser) return <>Loading...</>;
 
     return (
         <div className="root">

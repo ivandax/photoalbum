@@ -1,7 +1,12 @@
 import { combineReducers } from 'redux';
 
-import headerToggleReducer from './headerToggleReducer';
-import sessionReducer from './sessionReducer';
+import headerToggleReducer, { HeaderToggleState } from './headerToggleReducer';
+import sessionReducer, { SessionState } from './sessionReducer';
+
+export type State = {
+    headerToggleState: HeaderToggleState;
+    sessionState: SessionState;
+};
 
 const rootReducers = combineReducers({
     headerToggle: headerToggleReducer,
