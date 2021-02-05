@@ -4,14 +4,15 @@ import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { login } from '../../../persistence/auth';
-import { SessionState } from '../../../redux/sessionReducer';
+import { State } from '../../../redux/index';
 
 import FormInput from '../formInput';
 
 import './loginForm.scss';
 
 const LoginForm = (): JSX.Element => {
-    const user = useSelector((state: SessionState) => state.profile);
+    const state = useSelector((state: State) => state);
+    console.log(state);
     const history = useHistory();
 
     const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -51,7 +52,7 @@ const LoginForm = (): JSX.Element => {
             <button type="submit">Ingresar</button>
             <Link to="./sign-up">Crear una cuenta</Link>
             <span className="message">{message}</span>
-            {user === null && (
+            {state.session.profile === null && (
                 <span className="message">Email pendiente de validación.</span>
             )}
         </form>

@@ -4,8 +4,8 @@ import headerToggleReducer, { HeaderToggleState } from './headerToggleReducer';
 import sessionReducer, { SessionState } from './sessionReducer';
 
 export type State = {
-    headerToggleState: HeaderToggleState;
-    sessionState: SessionState;
+    headerToggle: HeaderToggleState;
+    session: SessionState;
 };
 
 const rootReducers = combineReducers({
