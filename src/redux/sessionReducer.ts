@@ -15,18 +15,18 @@ export type SetValidSessionAction = {
 
 export type SetUserProfileAction = {
     type: 'setUserProfile';
-    payload: UserWithId;
+    payload: UserWithId | null;
 };
 
 export type SessionAction = SetValidSessionAction | SetUserProfileAction;
 
 //ACTIONS
 
-export const setValidSession = () => {
+export const setValidSession = (): SetValidSessionAction => {
     return { type: 'setValidSession' };
 };
 
-export const setUserProfile = (user: UserWithId | null) => {
+export const setUserProfile = (user: UserWithId | null): SetUserProfileAction => {
     return { type: 'setUserProfile', payload: user };
 };
 
@@ -34,7 +34,7 @@ export const setUserProfile = (user: UserWithId | null) => {
 
 const initialState: SessionState = { validSession: false, profile: null };
 
-function sessionReducer(state = initialState, action: SessionAction) {
+function sessionReducer(state = initialState, action: SessionAction): SessionState {
     switch (action.type) {
         case 'setValidSession':
             return { ...state, validSession: true };

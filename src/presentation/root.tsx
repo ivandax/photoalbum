@@ -16,7 +16,6 @@ import useValidateSession from '../customHooks/useValidateSession';
 
 const Root: React.FC = () => {
     const resolvedUser = useValidateSession();
-    console.log(resolvedUser);
 
     if (!resolvedUser) return <>Loading...</>;
 

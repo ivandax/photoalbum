@@ -9,7 +9,7 @@ interface FormInputProps {
     className?: string;
 }
 
-const FormInput: React.FC<FormInputProps> = (props) => {
+const FormInput: React.FC<FormInputProps> = (props: FormInputProps) => {
     const {
         value,
         onChange,

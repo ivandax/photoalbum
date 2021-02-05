@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { addUser, getUser } from '../persistence/users';
 import { registerAuthObserver } from '../persistence/auth';
 
 import { setValidSession, setUserProfile } from '../redux/sessionReducer';
 
-function useValidateSession() {
+function useValidateSession(): boolean {
     const dispatch = useDispatch();
 
-    const [resolvedUser, setResolvedUser] = useState(false)
+    const [resolvedUser, setResolvedUser] = useState(false);
 
     useEffect(() => {
         const cancelObserver = registerAuthObserver(async (user) => {
@@ -34,7 +34,7 @@ function useValidateSession() {
                     } else {
                         dispatch(setUserProfile(profile));
                         dispatch(setValidSession());
-                        setResolvedUser(true)
+                        setResolvedUser(true);
                     }
                 } else {
                     dispatch(setUserProfile(null));

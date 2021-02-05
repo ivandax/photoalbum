@@ -6,7 +6,7 @@ import SignUpForm from '../../components//SignUpForm';
 //styles
 import './signUp.scss';
 
-const SignUp: React.FC = () => {
+const SignUp = (): JSX.Element => {
     return (
         <div className="signUp">
             <SignUpForm />

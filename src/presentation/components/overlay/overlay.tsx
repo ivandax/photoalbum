@@ -12,7 +12,7 @@ interface State {
     headerToggle: HeaderToggleState;
 }
 
-const Overlay = () => {
+const Overlay = (): JSX.Element => {
     const displayMobileHeader = useSelector((state: State) => state.headerToggle.show);
 
     const dispatch = useDispatch();

@@ -34,13 +34,13 @@ function getDbInstance() {
     return db;
 }
 
-const addUser = async (item: User, id: string) => {
+const addUser = async (item: User, id: string): Promise<void> => {
     console.log('Adding or modifying user data');
     const db = getDbInstance();
     await db.collection('users').doc(id).set(item, { merge: true });
 };
 
-async function getUser(id: string) {
+async function getUser(id: string): Promise<UserWithId | null | undefined> {
     const db = getDbInstance();
     console.log(`Getting user ${id} from users`);
     const document = await db.collection('users').doc(id).get();

@@ -6,7 +6,7 @@ import LoginForm from '../../components/loginForm';
 //styles
 import './login.scss';
 
-const Login: React.FC = () => {
+const Login = (): JSX.Element => {
     return (
         <div className="login">
             <LoginForm />

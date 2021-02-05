@@ -7,7 +7,7 @@ import LittleBurger from '../littleBurger';
 
 import './headerToggle.scss';
 
-const HeaderToggle = () => {
+const HeaderToggle = (): JSX.Element => {
     const dispatch = useDispatch();
 
     const handleToggle = () => {

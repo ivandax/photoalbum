@@ -7,7 +7,7 @@ import FormInput from '../formInput';
 
 import './signUpForm.scss';
 
-const SignUpForm = () => {
+const SignUpForm = (): JSX.Element => {
     const history = useHistory();
 
     const [signUpData, setSignUpData] = useState({email:'',password:''});

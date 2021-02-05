@@ -5,7 +5,7 @@ import React from "react";
 //styles
 import "./home.scss";
 
-const Home: React.FC = () => {
+const Home = (): JSX.Element => {
   return <div className="home">Home page</div>;
 };
 export default Home;

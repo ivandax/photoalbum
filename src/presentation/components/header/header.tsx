@@ -11,7 +11,7 @@ interface State {
     headerToggle: HeaderToggleState;
 }
 
-const Header = () => {
+const Header = (): JSX.Element => {
     const displayMobileHeader = useSelector((state: State) => state.headerToggle.show);
 
     return (

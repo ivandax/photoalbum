@@ -10,7 +10,7 @@ import FormInput from '../formInput';
 
 import './loginForm.scss';
 
-const LoginForm = () => {
+const LoginForm = (): JSX.Element => {
     const user = useSelector((state: SessionState) => state.profile);
     const history = useHistory();
 
@@ -25,8 +25,8 @@ const LoginForm = () => {
             setMessage('Por favor, rellene todos los campos.');
         } else {
             const result = await login(email, password);
-            if (result.message) {
-                setMessage(result.message);
+            if (result !== undefined) {
+                setMessage(result);
             } else {
                 history.push('./home');
             }

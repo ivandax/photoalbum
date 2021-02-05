@@ -3,22 +3,25 @@ export interface HeaderToggleState {
 }
 
 export interface HeaderToggleAction {
-  type: "show" | "hide";
+    type: 'show' | 'hide';
 }
 
-export const showHeader = () => {
-  return { type: "show" };
+export const showHeader = (): HeaderToggleAction => {
+    return { type: 'show' };
 };
 
-export const hideHeader = () => {
-  return { type: "hide" };
+export const hideHeader = (): HeaderToggleAction => {
+    return { type: 'hide' };
 };
 
 //STATE AND REDUCER
 
 const initialState: HeaderToggleState = { show: false };
 
-function headerToggleReducer(state = initialState, action: HeaderToggleAction) {
+function headerToggleReducer(
+    state = initialState,
+    action: HeaderToggleAction
+): HeaderToggleState {
     switch (action.type) {
         case 'show':
             return { show: true };
