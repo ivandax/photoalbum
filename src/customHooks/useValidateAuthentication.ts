@@ -4,9 +4,13 @@ import { useDispatch } from 'react-redux';
 import { addUser, getUser, UserWithId } from '../persistence/users';
 import { registerAuthObserver } from '../persistence/auth';
 
-import { setValidSessionData, setFailedSessionData } from '../redux/sessionReducer';
+import {
+    setValidSessionData,
+    setFailedSessionData,
+    setOngoingSessionData,
+} from '../redux/sessionReducer';
 
-function useValidateSession(): AsyncOp<UserWithId, string> {
+function useValidateAuthentication(): AsyncOp<UserWithId, string> {
     const dispatch = useDispatch();
 
     const [resolvedUser, setResolvedUser] = useState<AsyncOp<UserWithId, string>>({
@@ -15,8 +19,8 @@ function useValidateSession(): AsyncOp<UserWithId, string> {
 
     useEffect(() => {
         const cancelObserver = registerAuthObserver(async (user) => {
+            dispatch(setOngoingSessionData());
             setResolvedUser({ status: 'ongoing' });
-            console.log(user);
             if (user !== null) {
                 console.log('auth observer user success...' + user);
                 if (user.emailVerified === true) {
@@ -38,11 +42,11 @@ function useValidateSession(): AsyncOp<UserWithId, string> {
                         setResolvedUser({ status: 'successful', data: profile });
                     }
                 } else {
-                    dispatch(setFailedSessionData("No se ha podido validar una sesión"));
+                    dispatch(setFailedSessionData('Email no verificado.'));
                     setResolvedUser({ status: 'failed', error: 'Email no verificado' });
                 }
             } else {
-                console.log('auth observer user failure');
+                dispatch(setFailedSessionData('No se ha podido validar una sesión'));
                 setResolvedUser({
                     status: 'failed',
                     error: 'No se ha podido obtener un usuario',
@@ -53,9 +57,9 @@ function useValidateSession(): AsyncOp<UserWithId, string> {
         return () => {
             cancelObserver();
         };
-    }, [dispatch]);
+    }, []);
 
     return resolvedUser;
 }
 
-export default useValidateSession;
+export default useValidateAuthentication;

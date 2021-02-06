@@ -13,14 +13,10 @@ import HeaderToggle from './components/headerToggle';
 import Overlay from './components/overlay';
 
 ///hooks
-import useValidateSession from '../customHooks/useValidateSession';
+import useValidateAuthentication from '../customHooks/useValidateAuthentication';
 
 const Root: React.FC = () => {
-    const resolvedUser = useValidateSession();
-
-    if (resolvedUser.status === 'pending' || resolvedUser.status === 'ongoing')
-        return <>Loading...</>;
-
+    const resolvedUser = useValidateAuthentication();
     return (
         <div className="root">
             <Router>
