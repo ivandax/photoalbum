@@ -1,0 +1,10 @@
+@import '../../../style/mixins.scss';
+@import '../../../style/variables.scss';
+
+.styledButton {
+    padding: 8px;
+    margin: 8px;
+    background-color: $primary;
+    color: white;
+    border-radius: 2px;
+}

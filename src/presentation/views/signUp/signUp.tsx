@@ -1,7 +1,7 @@
 import React from 'react';
 
 //components
-import SignUpForm from '../../components//SignUpForm';
+import SignUpForm from '../../components/signUpForm';
 
 //styles
 import './signUp.scss';

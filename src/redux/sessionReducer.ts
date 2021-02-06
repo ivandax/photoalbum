@@ -3,43 +3,73 @@ import { UserWithId } from '../persistence/users';
 //STATE
 
 export interface SessionState {
-    validSession: boolean;
-    profile: UserWithId | null;
+    sessionData: AsyncOp<UserWithId, string>;
 }
 
 //ACTION TYPES
 
-export type SetValidSessionAction = {
-    type: 'setValidSession';
+export type SetPendingSessionDataAction = {
+    type: 'setPendingSessionData';
 };
 
-export type SetUserProfileAction = {
-    type: 'setUserProfile';
-    payload: UserWithId | null;
+export type SetOngoingSessionDataAction = {
+    type: 'setOngoingSessionData';
 };
 
-export type SessionAction = SetValidSessionAction | SetUserProfileAction;
+export type SetFailedSessionDataAction = {
+    type: 'setFailedSessionData';
+    error: string;
+};
+
+export type SetValidSessionDataAction = {
+    type: 'setValidSessionData';
+    data: UserWithId;
+};
+
+type SetSessionDataAction =
+    | SetPendingSessionDataAction
+    | SetOngoingSessionDataAction
+    | SetFailedSessionDataAction
+    | SetValidSessionDataAction;
 
 //ACTIONS
 
-export const setValidSession = (): SetValidSessionAction => {
-    return { type: 'setValidSession' };
+export const setPendingSessionData = (): SetPendingSessionDataAction => {
+    return { type: 'setPendingSessionData' };
 };
-
-export const setUserProfile = (user: UserWithId | null): SetUserProfileAction => {
-    return { type: 'setUserProfile', payload: user };
+export const setOngoingSessionData = (): SetOngoingSessionDataAction => {
+    return { type: 'setOngoingSessionData' };
+};
+export const setFailedSessionData = (error: string): SetFailedSessionDataAction => {
+    return { type: 'setFailedSessionData', error: error };
+};
+export const setValidSessionData = (user: UserWithId): SetValidSessionDataAction => {
+    return { type: 'setValidSessionData', data: user };
 };
 
 //STATE AND REDUCER
 
-const initialState: SessionState = { validSession: false, profile: null };
+const initialState: SessionState = { sessionData: { status: 'pending' } };
 
-function sessionReducer(state = initialState, action: SessionAction): SessionState {
+function sessionReducer(
+    state = initialState,
+    action: SetSessionDataAction
+): SessionState {
     switch (action.type) {
-        case 'setValidSession':
-            return { ...state, validSession: true };
-        case 'setUserProfile':
-            return { ...state, profile: action.payload };
+        case 'setPendingSessionData':
+            return { ...state, sessionData: { status: 'pending' } };
+        case 'setOngoingSessionData':
+            return { ...state, sessionData: { status: 'ongoing' } };
+        case 'setFailedSessionData':
+            return {
+                ...state,
+                sessionData: {
+                    status: 'failed',
+                    error: action.error,
+                },
+            };
+        case 'setValidSessionData':
+            return { ...state, sessionData: { status: 'successful', data: action.data } };
         default:
             return state;
     }

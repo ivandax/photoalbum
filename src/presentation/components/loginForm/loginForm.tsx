@@ -11,8 +11,7 @@ import FormInput from '../formInput';
 import './loginForm.scss';
 
 const LoginForm = (): JSX.Element => {
-    const state = useSelector((state: State) => state);
-    console.log(state);
+    const sessionState = useSelector((state: State) => state.session);
     const history = useHistory();
 
     const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -36,24 +35,32 @@ const LoginForm = (): JSX.Element => {
 
     return (
         <form onSubmit={handleLogin} className="loginForm">
-            <h3>Iniciar Sesión</h3>
-            <FormInput
-                placeholder="Email"
-                value={loginData.email}
-                type="email"
-                onChange={(value) => setLoginData({ ...loginData, email: value })}
-            />
-            <FormInput
-                placeholder="Contraseña"
-                value={loginData.password}
-                type="password"
-                onChange={(value) => setLoginData({ ...loginData, password: value })}
-            />
-            <button type="submit">Ingresar</button>
-            <Link to="./sign-up">Crear una cuenta</Link>
-            <span className="message">{message}</span>
-            {state.session.profile === null && (
-                <span className="message">Email pendiente de validación.</span>
+            {sessionState.sessionData.status === "successful" ? (
+                <h3>Usted ya ha iniciado sesión</h3>
+            ) : (
+                <>
+                    <h3>Iniciar Sesión</h3>
+                    <FormInput
+                        placeholder="Email"
+                        value={loginData.email}
+                        type="email"
+                        onChange={(value) => setLoginData({ ...loginData, email: value })}
+                    />
+                    <FormInput
+                        placeholder="Contraseña"
+                        value={loginData.password}
+                        type="password"
+                        onChange={(value) =>
+                            setLoginData({ ...loginData, password: value })
+                        }
+                    />
+                    <button type="submit">Ingresar</button>
+                    <Link to="./sign-up">Crear una cuenta</Link>
+                    <span className="message">{message}</span>
+                    {sessionState.sessionData.status === "failed" && (
+                        <span className="message">Email pendiente de validación.</span>
+                    )}
+                </>
             )}
         </form>
     );

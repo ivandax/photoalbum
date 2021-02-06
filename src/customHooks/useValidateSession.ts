@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { addUser, getUser } from '../persistence/users';
+import { addUser, getUser, UserWithId } from '../persistence/users';
 import { registerAuthObserver } from '../persistence/auth';
 
-import { setValidSession, setUserProfile } from '../redux/sessionReducer';
+import { setValidSessionData, setFailedSessionData } from '../redux/sessionReducer';
 
-function useValidateSession(): boolean {
+function useValidateSession(): AsyncOp<UserWithId, string> {
     const dispatch = useDispatch();
 
-    const [resolvedUser, setResolvedUser] = useState(false);
+    const [resolvedUser, setResolvedUser] = useState<AsyncOp<UserWithId, string>>({
+        status: 'pending',
+    });
 
     useEffect(() => {
         const cancelObserver = registerAuthObserver(async (user) => {
+            setResolvedUser({ status: 'ongoing' });
             console.log(user);
             if (user !== null) {
                 console.log('auth observer user success...' + user);
@@ -28,19 +31,22 @@ function useValidateSession(): boolean {
                             id: user.uid,
                         };
                         await addUser(newProfile, user.uid);
-                        dispatch(setUserProfile(newProfile));
-                        dispatch(setValidSession());
-                        setResolvedUser(true);
+                        dispatch(setValidSessionData(newProfile));
+                        setResolvedUser({ status: 'successful', data: newProfile });
                     } else {
-                        dispatch(setUserProfile(profile));
-                        dispatch(setValidSession());
-                        setResolvedUser(true);
+                        dispatch(setValidSessionData(profile));
+                        setResolvedUser({ status: 'successful', data: profile });
                     }
                 } else {
-                    dispatch(setUserProfile(null));
+                    dispatch(setFailedSessionData("No se ha podido validar una sesión"));
+                    setResolvedUser({ status: 'failed', error: 'Email no verificado' });
                 }
             } else {
                 console.log('auth observer user failure');
+                setResolvedUser({
+                    status: 'failed',
+                    error: 'No se ha podido obtener un usuario',
+                });
             }
         });
 

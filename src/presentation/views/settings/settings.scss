@@ -1,0 +1,15 @@
+@import '../../../style/mixins.scss';
+@import '../../../style/variables.scss';
+
+.settings{
+    height: 100vh;
+    background-color: $golden;
+    @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
+
+    & > div{
+        margin: 8px;
+        & > p{
+            padding-top: 8px;
+        }
+    }
+}

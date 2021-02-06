@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './views/home';
 import Login from './views/login';
 import SignUp from './views/signUp';
+import Settings from './views/settings';
 
 //components
 import Header from './components/header';
@@ -17,18 +18,20 @@ import useValidateSession from '../customHooks/useValidateSession';
 const Root: React.FC = () => {
     const resolvedUser = useValidateSession();
 
-    if (!resolvedUser) return <>Loading...</>;
+    if (resolvedUser.status === 'pending' || resolvedUser.status === 'ongoing')
+        return <>Loading...</>;
 
     return (
         <div className="root">
             <Router>
-                <Header />
-                <HeaderToggle />
-                <Overlay />
+                {resolvedUser.status === 'successful' ? <Header /> : null}
+                {resolvedUser.status === 'successful' ? <HeaderToggle /> : null}
+                {resolvedUser.status === 'successful' ? <Overlay /> : null}
                 <Switch>
                     <Route path="/login" component={Login}></Route>
                     <Route path="/sign-up" component={SignUp}></Route>
                     <Route path="/home" component={Home}></Route>
+                    <Route path="/settings" component={Settings}></Route>
                     <Route path="/" component={Home}></Route>
                 </Switch>
             </Router>
