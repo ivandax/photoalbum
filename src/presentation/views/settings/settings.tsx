@@ -21,7 +21,11 @@ const Settings = (): JSX.Element => {
                 <div>
                     <h3>Usted tiene una sesión iniciada</h3>
                     <p>Loggeado como: {sessionState.sessionData.data.email}</p>
-                    <StyledButton value="Cerrar Sesión" callback={handleLogout}/>
+                    <StyledButton
+                        value="Cerrar Sesión"
+                        callback={handleLogout}
+                        className="red"
+                    />
                 </div>
             ) : (
                 <div>Error: No hay sesión iniciada</div>

@@ -3,16 +3,13 @@ import 'firebase/firestore';
 
 //Interfaces
 
-export interface User {
+export interface UserWithId {
     name: string;
     email: string | null;
     role: string;
     createdOn: number;
     isAdmin: boolean;
-}
-
-export interface UserWithId extends User {
-    id: string;
+    emailVerified: boolean;
 }
 
 //Functions
@@ -34,7 +31,7 @@ function getDbInstance() {
     return db;
 }
 
-const addUser = async (item: User, id: string): Promise<void> => {
+const addUser = async (item: UserWithId, id: string): Promise<void> => {
     console.log('Adding or modifying user data');
     const db = getDbInstance();
     await db.collection('users').doc(id).set(item, { merge: true });

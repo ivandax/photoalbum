@@ -35,10 +35,7 @@ function registerAuthObserver(callback: AuthObserverCallback): firebase.Unsubscr
 
 async function login(email: string, password: string): Promise<string | undefined> {
     try {
-        const result = await firebase.auth().signInWithEmailAndPassword(email, password);
-        if (result.user !== null) {
-            return result.user.uid;
-        }
+        await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch(e) {
         console.log(e)
         return "Error al iniciar sesión";

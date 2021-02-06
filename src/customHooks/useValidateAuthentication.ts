@@ -29,10 +29,11 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
                         const newProfile = {
                             name: '',
                             email: user.email,
-                            role: 'member',
+                            role: 'standard',
                             createdOn: +new Date(),
                             isAdmin: false,
                             id: user.uid,
+                            emailVerified: user.emailVerified,
                         };
                         await addUser(newProfile, user.uid);
                         dispatch(setValidSessionData(newProfile));
