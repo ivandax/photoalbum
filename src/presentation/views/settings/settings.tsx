@@ -5,6 +5,7 @@ import { State } from '../../../redux/index';
 import { logout } from '../../../persistence/auth';
 
 //components
+import StyledButton from '../../components/styledButton';
 
 //styles
 import './settings.scss';
@@ -20,7 +21,7 @@ const Settings = (): JSX.Element => {
                 <div>
                     <h3>Usted tiene una sesión iniciada</h3>
                     <p>Loggeado como: {sessionState.sessionData.data.email}</p>
-                    <button onClick={handleLogout}>Cerrar Sesión</button>
+                    <StyledButton value="Cerrar Sesión" callback={handleLogout}/>
                 </div>
             ) : (
                 <div>Error: No hay sesión iniciada</div>

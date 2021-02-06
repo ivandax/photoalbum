@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './styledButton.scss';
+
 interface StyledButtonProps {
     value: string;
     callback: () => void;
