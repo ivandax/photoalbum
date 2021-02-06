@@ -1,29 +1,21 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router';
-
+import React from 'react';
 //hooks
 import useCheckSession from '../../../customHooks/useCheckSession';
 
 //components
 import SignUpForm from '../../components/signUpForm';
+import Loader from '../../components/loader';
 
 //styles
 import './signUp.scss';
 
 const SignUp = (): JSX.Element => {
     const sessionResolution = useCheckSession();
-    const history = useHistory();
-
-    useEffect(() => {
-        if (sessionResolution === 'redirect') {
-            history.push('./login');
-        }
-    }, [sessionResolution]);
 
     switch (sessionResolution) {
         case 'wait':
+            return <Loader />;
         case 'redirect':
-            return <>Loading...</>;
         case 'stop':
             return (
                 <div className="signUp">

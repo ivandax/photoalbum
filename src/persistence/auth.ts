@@ -7,34 +7,39 @@ type AuthObserverCallback = (a: firebase.User | null) => void;
 
 //FUNCTIONS
 
-async function signup(
-    email: string,
-    password: string
-): Promise<string | null | undefined> {
+// async function signup(
+//     email: string,
+//     password: string
+// ): Promise<void> {
+//     const createResult = await firebase
+//         .auth()
+//         .createUserWithEmailAndPassword(email, password);
+//     if (createResult) {
+//         const auth = firebase.auth();
+//         if (auth !== null) {
+//             if (auth.currentUser !== null) {
+//                 auth.currentUser.sendEmailVerification();
+//             }
+//         }
+//     }
+// }
+
+async function signup(email: string, password: string): Promise<string | undefined> {
     try {
-        const createResult = await firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password);
-        if (createResult) {
-            const auth = firebase.auth();
-            if (auth !== null) {
-                if (auth.currentUser !== null) {
-                    auth.currentUser.sendEmailVerification();
-                    return auth.currentUser.email;
-                }
-            }
-        }
-    } catch {
-        return 'No se ha podido crear la cuenta.';
+        await firebase.auth().createUserWithEmailAndPassword(email, password);
+    } catch (e) {
+        console.log(e);
+        return 'Error al crear la cuenta';
     }
 }
 
-function logout(): void {
-    firebase.auth().signOut();
-}
-
-function registerAuthObserver(callback: AuthObserverCallback): firebase.Unsubscribe {
-    return firebase.auth().onAuthStateChanged(callback);
+async function sendEmailValidation(): Promise<string | undefined> {
+    try {
+        await firebase.auth().currentUser?.sendEmailVerification();
+    } catch (e) {
+        console.log(e);
+        return 'Error al enviar el email de validación';
+    }
 }
 
 async function login(email: string, password: string): Promise<string | undefined> {
@@ -44,6 +49,14 @@ async function login(email: string, password: string): Promise<string | undefine
         console.log(e);
         return 'Error al iniciar sesión';
     }
+}
+
+function logout(): void {
+    firebase.auth().signOut();
+}
+
+function registerAuthObserver(callback: AuthObserverCallback): firebase.Unsubscribe {
+    return firebase.auth().onAuthStateChanged(callback);
 }
 
 async function recoverUserPassword(address: string): Promise<string> {
@@ -61,4 +74,11 @@ async function recoverUserPassword(address: string): Promise<string> {
     return resolution;
 }
 
-export { signup, logout, login, registerAuthObserver, recoverUserPassword };
+export {
+    signup,
+    sendEmailValidation,
+    logout,
+    login,
+    registerAuthObserver,
+    recoverUserPassword,
+};

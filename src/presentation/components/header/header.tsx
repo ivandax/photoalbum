@@ -19,12 +19,12 @@ const Header = (): JSX.Element => {
             <div className="left">
                 <h3>Pizza Pizza Pizza</h3>
                 <NavLink to={'/home'} activeClassName="activeRoute">
-                    Home
+                    Inicio
                 </NavLink>
             </div>
             <div className="right">
                 <NavLink to={'/login'} activeClassName="activeRoute">
-                    Login
+                    Sesión
                 </NavLink>
                 <NavLink to={'/settings'} activeClassName="activeRoute">
                     Settings

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 
 //components
+import Loader from '../../components/loader';
 
 //hooks
 import useCheckSession from '../../../customHooks/useCheckSession';
@@ -22,7 +23,7 @@ const Home = (): JSX.Element => {
     switch (sessionResolution) {
         case 'wait':
         case 'redirect':
-            return <>Loading...</>;
+            return <Loader />;
         case 'stop':
             return <div className="home">Home page</div>;
         default:

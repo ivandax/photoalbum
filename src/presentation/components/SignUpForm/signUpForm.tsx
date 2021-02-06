@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { signup } from '../../../persistence/auth';
+import { signup, sendEmailValidation } from '../../../persistence/auth';
 import { State } from '../../../redux/index';
 
 import FormInput from '../formInput';
@@ -11,7 +10,6 @@ import FormInput from '../formInput';
 import './signUpForm.scss';
 
 const SignUpForm = (): JSX.Element => {
-    const history = useHistory();
     const sessionState = useSelector((state: State) => state.session);
 
     const [signUpData, setSignUpData] = useState({ email: '', password: '' });
@@ -24,12 +22,20 @@ const SignUpForm = (): JSX.Element => {
         if (email.length === 0 || password.length === 0) {
             setMessage('Por favor, rellene todos los campos.');
         } else {
-            const result = await signup(email, password);
-            if (typeof result !== 'string') {
-                setMessage('Ha ocurrido un error');
-            } else {
-                history.push('./home');
-            }
+            // const signUp = await signup(email, password);
+            // if (typeof signUp === 'string') {
+            //     setMessage(signUp);
+            // }
+            // const sendEmail = await sendEmailValidation();
+            // if (typeof sendEmail === 'string') {
+            //     setMessage(sendEmail);
+            // }
+            // if (signUp === undefined && sendEmail === undefined) {
+            //     setMessage('Se ha enviado un email de validación a su correo');
+            // }
+            Promise.all([signup(email, password), sendEmailValidation()]).then(() =>
+                setMessage('Se ha enviado un email de validación a su correo')
+            );
         }
     };
 
@@ -38,9 +44,6 @@ const SignUpForm = (): JSX.Element => {
             {sessionState.sessionData.status === 'successful' ? (
                 <>
                     <h3>Usted ya ha iniciado sesión</h3>
-                    {!sessionState.sessionData.data.emailVerified ? (
-                        <p>Email pendiente de verificación. Revise su correo.</p>
-                    ) : null}
                     {sessionState.sessionData.data.role === 'standard' ? (
                         <p>
                             El administrador debe darle permisos para hacer publicaciones.

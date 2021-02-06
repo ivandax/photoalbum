@@ -10,6 +10,7 @@ import useCheckSession from '../../../customHooks/useCheckSession';
 
 //components
 import StyledButton from '../../components/styledButton';
+import Loader from '../../components/loader';
 
 //styles
 import './settings.scss';
@@ -30,7 +31,7 @@ const Settings = (): JSX.Element => {
     switch (sessionResolution) {
         case 'wait':
         case 'redirect':
-            return <>Loading...</>;
+            return <Loader />;
         case 'stop':
             return (
                 <div className="settings">
