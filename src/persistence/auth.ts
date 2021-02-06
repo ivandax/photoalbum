@@ -11,17 +11,21 @@ async function signup(
     email: string,
     password: string
 ): Promise<string | null | undefined> {
-    const createResult = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-    if (createResult) {
-        const auth = firebase.auth();
-        if (auth !== null) {
-            if (auth.currentUser !== null) {
-                auth.currentUser.sendEmailVerification();
-                return auth.currentUser.email;
+    try {
+        const createResult = await firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password);
+        if (createResult) {
+            const auth = firebase.auth();
+            if (auth !== null) {
+                if (auth.currentUser !== null) {
+                    auth.currentUser.sendEmailVerification();
+                    return auth.currentUser.email;
+                }
             }
         }
+    } catch {
+        return 'No se ha podido crear la cuenta.';
     }
 }
 
@@ -36,9 +40,9 @@ function registerAuthObserver(callback: AuthObserverCallback): firebase.Unsubscr
 async function login(email: string, password: string): Promise<string | undefined> {
     try {
         await firebase.auth().signInWithEmailAndPassword(email, password);
-    } catch(e) {
-        console.log(e)
-        return "Error al iniciar sesión";
+    } catch (e) {
+        console.log(e);
+        return 'Error al iniciar sesión';
     }
 }
 
