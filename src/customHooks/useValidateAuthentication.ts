@@ -23,28 +23,33 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
             setResolvedUser({ status: 'ongoing' });
             if (user !== null) {
                 console.log('auth observer user success...' + user);
-                if (user.emailVerified === true) {
-                    const profile = await getUser(user.uid);
-                    if (profile === null || profile === undefined) {
-                        const newProfile = {
-                            name: '',
-                            email: user.email,
-                            role: 'standard',
-                            createdOn: +new Date(),
-                            isAdmin: false,
-                            id: user.uid,
+                const existingProfile = await getUser(user.uid);
+                if (existingProfile === null || existingProfile === undefined) {
+                    const newProfile = {
+                        name: '',
+                        email: user.email,
+                        role: 'standard',
+                        createdOn: +new Date(),
+                        isAdmin: false,
+                        id: user.uid,
+                        emailVerified: user.emailVerified,
+                    };
+                    await addUser(newProfile, user.uid);
+                    dispatch(setValidSessionData(newProfile));
+                    setResolvedUser({ status: 'successful', data: newProfile });
+                } else {
+                    if (user.emailVerified === true) {
+                        const reviewedProfile = {
+                            ...existingProfile,
                             emailVerified: user.emailVerified,
                         };
-                        await addUser(newProfile, user.uid);
-                        dispatch(setValidSessionData(newProfile));
-                        setResolvedUser({ status: 'successful', data: newProfile });
-                    } else {
-                        dispatch(setValidSessionData(profile));
-                        setResolvedUser({ status: 'successful', data: profile });
+                        await addUser(reviewedProfile, user.uid);
+                        dispatch(setValidSessionData(reviewedProfile));
+                        setResolvedUser({ status: 'successful', data: reviewedProfile });
+                    } else{
+                        dispatch(setValidSessionData(existingProfile));
+                        setResolvedUser({ status: 'successful', data: existingProfile });
                     }
-                } else {
-                    dispatch(setFailedSessionData('Email no verificado.'));
-                    setResolvedUser({ status: 'failed', error: 'Email no verificado' });
                 }
             } else {
                 dispatch(setFailedSessionData('No se ha podido validar una sesión'));
