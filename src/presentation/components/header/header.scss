@@ -19,12 +19,16 @@
             padding: 8px;
         }
         a{
+            width: 100%;
             color: black;
             padding: 16px;
             &:hover{
                 text-decoration: underline;
                 transition: text-decoration 1s;
                 background-color: lightgrey;
+            }
+            @media only screen and (min-width: $tablet){
+                width: auto;
             }
         }
         div{

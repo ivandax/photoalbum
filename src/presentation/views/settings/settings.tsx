@@ -11,6 +11,7 @@ import useCheckSession from '../../../customHooks/useCheckSession';
 //components
 import StyledButton from '../../components/styledButton';
 import Loader from '../../components/loader';
+import EditSettings from '../../components/editSettings';
 
 //styles
 import './settings.scss';
@@ -39,6 +40,7 @@ const Settings = (): JSX.Element => {
                         <div>
                             <h3>Usted tiene una sesión iniciada</h3>
                             <p>Loggeado como: {sessionState.sessionData.data.email}</p>
+                            <EditSettings userData={sessionState.sessionData.data} />
                             <StyledButton
                                 value="Cerrar Sesión"
                                 callback={handleLogout}

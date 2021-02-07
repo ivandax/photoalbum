@@ -10,14 +10,17 @@ export interface UserWithId {
     createdOn: number;
     isAdmin: boolean;
     emailVerified: boolean;
+    id: string;
 }
+
+export type PartialUserWithId = Partial<UserWithId>;
 
 //Functions
 
 function parseDoc(
     doc: firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
 ) {
-    const castedDoc = doc.data() as UserWithId
+    const castedDoc = doc.data() as UserWithId;
     if (castedDoc) {
         return { ...castedDoc, id: doc.id };
     }
@@ -32,7 +35,13 @@ function getDbInstance() {
 }
 
 const addUser = async (item: UserWithId, id: string): Promise<void> => {
-    console.log('Adding or modifying user data');
+    console.log('Adding user');
+    const db = getDbInstance();
+    await db.collection('users').doc(id).set(item, { merge: true });
+};
+
+const updateUser = async (item: PartialUserWithId, id: string): Promise<void> => {
+    console.log('Editing user');
     const db = getDbInstance();
     await db.collection('users').doc(id).set(item, { merge: true });
 };
@@ -47,4 +56,4 @@ async function getUser(id: string): Promise<UserWithId | null | undefined> {
     return null;
 }
 
-export { addUser, getUser };
+export { addUser, getUser, updateUser };

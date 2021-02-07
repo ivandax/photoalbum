@@ -38,7 +38,10 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
                     dispatch(setValidSessionData(newProfile));
                     setResolvedUser({ status: 'successful', data: newProfile });
                 } else {
-                    if (user.emailVerified === true) {
+                    if (
+                        user.emailVerified === true &&
+                        existingProfile.emailVerified === false
+                    ) {
                         const reviewedProfile = {
                             ...existingProfile,
                             emailVerified: user.emailVerified,
@@ -46,7 +49,7 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
                         await addUser(reviewedProfile, user.uid);
                         dispatch(setValidSessionData(reviewedProfile));
                         setResolvedUser({ status: 'successful', data: reviewedProfile });
-                    } else{
+                    } else {
                         dispatch(setValidSessionData(existingProfile));
                         setResolvedUser({ status: 'successful', data: existingProfile });
                     }
