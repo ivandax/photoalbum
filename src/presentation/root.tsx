@@ -17,7 +17,6 @@ import useValidateAuthentication from '../customHooks/useValidateAuthentication'
 
 const Root: React.FC = () => {
     const resolvedUser = useValidateAuthentication();
-    console.log(resolvedUser);
     return (
         <div className="root">
             <Router>

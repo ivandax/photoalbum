@@ -6,11 +6,13 @@ import Loader from '../../components/loader';
 
 //hooks
 import useCheckSession from '../../../customHooks/useCheckSession';
+import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
 
 //styles
 import './home.scss';
 
 const Home = (): JSX.Element => {
+    useResetHeaderToggle();
     const history = useHistory();
     const sessionResolution = useCheckSession();
 

@@ -7,6 +7,7 @@ import { logout } from '../../../persistence/auth';
 
 //hooks
 import useCheckSession from '../../../customHooks/useCheckSession';
+import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
 
 //components
 import StyledButton from '../../components/styledButton';
@@ -17,6 +18,7 @@ import EditSettings from '../../components/editSettings';
 import './settings.scss';
 
 const Settings = (): JSX.Element => {
+    useResetHeaderToggle();
     const sessionState = useSelector((state: State) => state.session);
     const history = useHistory();
     const sessionResolution = useCheckSession();

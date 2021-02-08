@@ -27,7 +27,7 @@ const Header = (): JSX.Element => {
                     Sesión
                 </NavLink>
                 <NavLink to={'/settings'} activeClassName="activeRoute">
-                    Settings
+                    Configuración
                 </NavLink>
             </div>
         </header>
