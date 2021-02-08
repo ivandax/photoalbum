@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { addUser, getUser, UserWithId } from '../persistence/users';
 import { registerAuthObserver } from '../persistence/auth';
+
+import { State } from '../redux/index';
 
 import {
     setValidSessionData,
@@ -12,15 +14,11 @@ import {
 
 function useValidateAuthentication(): AsyncOp<UserWithId, string> {
     const dispatch = useDispatch();
-
-    const [resolvedUser, setResolvedUser] = useState<AsyncOp<UserWithId, string>>({
-        status: 'pending',
-    });
+    const sessionData = useSelector((state: State) => state.session.sessionData);
 
     useEffect(() => {
         const cancelObserver = registerAuthObserver(async (user) => {
             dispatch(setOngoingSessionData());
-            setResolvedUser({ status: 'ongoing' });
             if (user !== null) {
                 console.log('auth observer user success...' + user);
                 const existingProfile = await getUser(user.uid);
@@ -36,7 +34,6 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
                     };
                     await addUser(newProfile, user.uid);
                     dispatch(setValidSessionData(newProfile));
-                    setResolvedUser({ status: 'successful', data: newProfile });
                 } else {
                     if (
                         user.emailVerified === true &&
@@ -48,18 +45,12 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
                         };
                         await addUser(reviewedProfile, user.uid);
                         dispatch(setValidSessionData(reviewedProfile));
-                        setResolvedUser({ status: 'successful', data: reviewedProfile });
                     } else {
                         dispatch(setValidSessionData(existingProfile));
-                        setResolvedUser({ status: 'successful', data: existingProfile });
                     }
                 }
             } else {
                 dispatch(setFailedSessionData('No se ha podido validar una sesión'));
-                setResolvedUser({
-                    status: 'failed',
-                    error: 'No se ha podido obtener un usuario',
-                });
             }
         });
 
@@ -68,7 +59,7 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
         };
     }, []);
 
-    return resolvedUser;
+    return sessionData;
 }
 
 export default useValidateAuthentication;
