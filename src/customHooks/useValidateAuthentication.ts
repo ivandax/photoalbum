@@ -35,10 +35,7 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
                     await addUser(newProfile, user.uid);
                     dispatch(setValidSessionData(newProfile));
                 } else {
-                    if (
-                        user.emailVerified === true &&
-                        existingProfile.emailVerified === false
-                    ) {
+                    if (user.emailVerified !== existingProfile.emailVerified) {
                         const reviewedProfile = {
                             ...existingProfile,
                             emailVerified: user.emailVerified,
