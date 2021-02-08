@@ -56,4 +56,26 @@ async function getUser(id: string): Promise<UserWithId | null | undefined> {
     return null;
 }
 
-export { addUser, getUser, updateUser };
+async function getUsers(): Promise<UserWithId[] | string> {
+    const db = getDbInstance();
+    const results: UserWithId[] = [];
+    try {
+        await db
+            .collection('users')
+            .orderBy('createdOn')
+            .get()
+            .then(function (querySnapshot) {
+                querySnapshot.forEach((doc) => {
+                    const data = parseDoc(doc);
+                    if (data) {
+                        results.push(data);
+                    }
+                });
+            });
+        return results;
+    } catch (e) {
+        return `Error - ${e.message}`
+    }
+}
+
+export { addUser, getUser, updateUser, getUsers };

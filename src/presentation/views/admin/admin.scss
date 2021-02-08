@@ -5,4 +5,37 @@
     height: 100vh;
     background-color: $golden;
     @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
+
+    h3{
+        margin-left: 8px;
+        margin-top: 16px; 
+    }
+
+    table{
+        margin-top: 16px;
+        margin-left: 8px;
+        background-color: white;
+        border-radius: 4px;
+
+        thead{
+            border-color: $primary;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        tr{
+            border: none;
+            padding: 4px 0px 4px 0px;
+        }
+
+        th{
+            border: none;
+            color: white;
+            background-color: $primary;
+            padding: 4px 8px 4px 0px;
+        }
+        td{
+            padding: 4px 8px 4px 0px;
+        }
+    }
 }

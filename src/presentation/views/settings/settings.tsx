@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 
 import { State } from '../../../redux/index';
@@ -41,6 +42,12 @@ const Settings = (): JSX.Element => {
                         <h3>Usted tiene una sesión iniciada</h3>
                         <p>Loggeado como: {sessionData.data.email}</p>
                         <EditSettings userData={sessionData.data} />
+                        {sessionData.data.isAdmin ? (
+                            <div>
+                                <h3>Admin Panel</h3>
+                                <Link to="./admin">Ir al Admin Panel</Link>
+                            </div>
+                        ) : null}
                         <StyledButton
                             value="Cerrar Sesión"
                             callback={handleLogout}
