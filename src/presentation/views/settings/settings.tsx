@@ -6,7 +6,6 @@ import { State } from '../../../redux/index';
 import { logout } from '../../../persistence/auth';
 
 //hooks
-import useCheckSession from '../../../customHooks/useCheckSession';
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
 
 //components
@@ -19,39 +18,35 @@ import './settings.scss';
 
 const Settings = (): JSX.Element => {
     useResetHeaderToggle();
-    const sessionState = useSelector((state: State) => state.session);
+    const sessionData = useSelector((state: State) => state.session.sessionData);
     const history = useHistory();
-    const sessionResolution = useCheckSession();
 
     useEffect(() => {
-        if (sessionResolution === 'redirect') {
+        if (sessionData.status === 'failed') {
             history.push('./login');
         }
-    }, [sessionResolution]);
+    }, [sessionData.status]);
 
     const handleLogout = () => logout();
 
-    switch (sessionResolution) {
-        case 'wait':
-        case 'redirect':
+    switch (sessionData.status) {
+        case 'pending':
+        case 'ongoing':
+        case 'failed':
             return <Loader />;
-        case 'stop':
+        case 'successful':
             return (
                 <div className="settings">
-                    {sessionState.sessionData.status === 'successful' ? (
-                        <div>
-                            <h3>Usted tiene una sesión iniciada</h3>
-                            <p>Loggeado como: {sessionState.sessionData.data.email}</p>
-                            <EditSettings userData={sessionState.sessionData.data} />
-                            <StyledButton
-                                value="Cerrar Sesión"
-                                callback={handleLogout}
-                                className="red"
-                            />
-                        </div>
-                    ) : (
-                        <div>Error: No hay sesión iniciada</div>
-                    )}
+                    <div>
+                        <h3>Usted tiene una sesión iniciada</h3>
+                        <p>Loggeado como: {sessionData.data.email}</p>
+                        <EditSettings userData={sessionData.data} />
+                        <StyledButton
+                            value="Cerrar Sesión"
+                            callback={handleLogout}
+                            className="red"
+                        />
+                    </div>
                 </div>
             );
         default:

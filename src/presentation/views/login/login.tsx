@@ -1,25 +1,28 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 //hooks
-import useCheckSession from '../../../customHooks/useCheckSession';
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
 
 //components
 import LoginForm from '../../components/loginForm';
 import Loader from '../../components/loader';
 
+import { State } from '../../../redux/index';
+
 //styles
 import './login.scss';
 
 const Login = (): JSX.Element => {
     useResetHeaderToggle();
-    const sessionResolution = useCheckSession();
+    const sessionData = useSelector((state: State) => state.session.sessionData);
     
-    switch (sessionResolution) {
-        case 'wait':
+    switch (sessionData.status) {
+        case 'pending':
+        case 'ongoing':
             return <Loader />;
-        case 'redirect':
-        case 'stop':
+        case 'failed':
+        case 'successful':
             return (
                 <div className="signUp">
                     <LoginForm />
