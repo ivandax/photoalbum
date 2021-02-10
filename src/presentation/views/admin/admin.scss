@@ -1,41 +1,52 @@
 @import '../../../style/mixins.scss';
 @import '../../../style/variables.scss';
 
-.admin{
+.admin {
     height: 100vh;
     background-color: $golden;
-    @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
+    @include flex-complete($direction: column, $justify: flex-start, $align: center);
 
-    h3{
+    h3 {
         margin-left: 8px;
-        margin-top: 16px; 
+        margin-top: 16px;
     }
 
-    table{
+    table {
         margin-top: 16px;
         margin-left: 8px;
         background-color: white;
         border-radius: 4px;
 
-        thead{
+        thead {
             border-color: $primary;
             border-collapse: collapse;
             border-spacing: 0;
         }
 
-        tr{
+        tr {
             border: none;
             padding: 4px 0px 4px 0px;
         }
 
-        th{
+        th {
             border: none;
             color: white;
             background-color: $primary;
             padding: 4px 8px 4px 0px;
         }
-        td{
+        td {
             padding: 4px 8px 4px 0px;
+        }
+    }
+
+    form {
+        width: 100%;
+        @include flex-complete($direction:row, $justify: center, $align: center);
+        button {
+            margin: 16px;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
         }
     }
 }

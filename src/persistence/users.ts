@@ -40,10 +40,18 @@ const addUser = async (item: UserWithId, id: string): Promise<void> => {
     await db.collection('users').doc(id).set(item, { merge: true });
 };
 
-const updateUser = async (item: PartialUserWithId, id: string): Promise<void> => {
+const updateUser = async (
+    item: PartialUserWithId,
+    id: string
+): Promise<void | string> => {
     console.log('Editing user');
     const db = getDbInstance();
-    await db.collection('users').doc(id).set(item, { merge: true });
+    try {
+        await db.collection('users').doc(id).set(item, { merge: true });
+    } catch (e) {
+        console.log(e);
+        return `Error - ${e.message}`;
+    }
 };
 
 async function getUser(id: string): Promise<UserWithId | null | undefined> {
@@ -74,7 +82,7 @@ async function getUsers(): Promise<UserWithId[] | string> {
             });
         return results;
     } catch (e) {
-        return `Error - ${e.message}`
+        return `Error - ${e.message}`;
     }
 }
 

@@ -11,7 +11,7 @@ import Loader from '../../components/loader';
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
 
 //persistence
-import { getUsers } from '../../../persistence/users';
+import { getUsers, updateUser } from '../../../persistence/users';
 
 //redux
 import {
@@ -43,6 +43,7 @@ const Admin = (): JSX.Element => {
     const { users } = useSelector((state: State) => state.adminPanel);
 
     const [roleChanges, setRoleChanges] = useState<RoleChange[]>([]);
+    const [localUpdateProcess, setLocalUpdateProcess] = useState("resolved");
 
     useEffect(() => {
         if (sessionData.status === 'failed') {
@@ -63,7 +64,20 @@ const Admin = (): JSX.Element => {
         }
     }, [users.status]);
 
-    if (users.status === 'pending' || users.status === 'ongoing') {
+    const handleSaveChanges = async (event: React.FormEvent) => {
+        setLocalUpdateProcess("loading");
+        event.preventDefault();
+        if (roleChanges.length > 0) {
+            await Promise.all(
+                roleChanges.map(
+                    async (change) => await updateUser({ role: change.role }, change.id)
+                )
+            );
+            setLocalUpdateProcess("resolved");
+        }
+    };
+
+    if (users.status === 'pending' || users.status === 'ongoing' || localUpdateProcess === "loading") {
         return <Loader />;
     }
 
@@ -141,6 +155,11 @@ const Admin = (): JSX.Element => {
                                     ))}
                                 </tbody>
                             </table>
+                            <form onSubmit={handleSaveChanges}>
+                                <button type="submit" disabled={roleChanges.length === 0}>
+                                    Guardar Cambios
+                                </button>
+                            </form>
                         </>
                     ) : (
                         <div>Access Denied</div>
