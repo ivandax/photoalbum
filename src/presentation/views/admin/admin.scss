@@ -35,7 +35,14 @@
             padding: 4px 8px 4px 0px;
         }
         td {
-            padding: 4px 8px 4px 0px;
+            padding: 4px 8px 4px 4px;
+            @media only screen and (min-width: $tablet){
+                padding: 8px 12px 8px 8px;
+            }
+
+            select{
+                padding: 4px;
+            }
         }
     }
 

@@ -43,7 +43,7 @@ const Settings = (): JSX.Element => {
                         <p>Loggeado como: {sessionData.data.email}</p>
                         <EditSettings userData={sessionData.data} />
                         {sessionData.data.isAdmin ? (
-                            <div>
+                            <div className="adminLink">
                                 <h3>Admin Panel</h3>
                                 <Link to="./admin">Ir al Admin Panel</Link>
                             </div>
