@@ -4,5 +4,17 @@
 .home{
     height: 100vh;
     background-color: $golden;
-    @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
+    @include flex-complete($direction: column, $justify: flex-start, $align: center);
+
+    .toolbar{
+        @include flex-complete($direction: row, $justify: space-between, $align: flex-start);
+        width: 270px;
+
+        button{
+            border: none;
+            padding: 8px;
+            width: 90px;
+            background-color: $golden;
+        }
+    }
 }

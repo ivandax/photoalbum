@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-a{
+a, button{
   cursor: pointer;
   text-decoration: none;
 }

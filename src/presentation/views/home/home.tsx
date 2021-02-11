@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { Add as AddIcon } from '@material-ui/icons';
 
 //components
 import Loader from '../../components/loader';
+import CreatePost from '../../components/createPost';
 
 //hooks
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
@@ -18,6 +20,7 @@ const Home = (): JSX.Element => {
     const history = useHistory();
     const sessionData = useSelector((state: State) => state.session.sessionData);
 
+    const [openCreatePost, setOpenCreatePost] = useState(false);
 
     useEffect(() => {
         if (sessionData.status === 'failed') {
@@ -31,7 +34,20 @@ const Home = (): JSX.Element => {
         case 'failed':
             return <Loader />;
         case 'successful':
-            return <div className="home">Home page</div>;
+            return (
+                <div className="home">
+                    <CreatePost
+                        isOpen={openCreatePost}
+                        sessionData={sessionData.data}
+                        onClose={() => setOpenCreatePost(false)}
+                    />
+                    <div className="toolbar">
+                        <button onClick={() => setOpenCreatePost(true)}>
+                            <AddIcon />
+                        </button>
+                    </div>
+                </div>
+            );
         default:
             return <></>;
     }
