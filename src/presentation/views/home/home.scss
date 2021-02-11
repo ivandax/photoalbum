@@ -2,7 +2,7 @@
 @import '../../../style/variables.scss';
 
 .home{
-    height: 100vh;
+    height: 100%;
     background-color: $golden;
     @include flex-complete($direction: column, $justify: flex-start, $align: center);
 
@@ -17,4 +17,8 @@
             background-color: $golden;
         }
     }
+}
+
+.blocked{
+    overflow-y: hidden;
 }
