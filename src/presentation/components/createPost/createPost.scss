@@ -3,7 +3,6 @@
 
 .createPost {
     position: fixed;
-    z-index: 899;
     left: 0;
     top: 0;
     width: 100%;
@@ -81,6 +80,10 @@
                 margin-left: 8px;
                 width: 70px;
             }
+            .readyToPost {
+                background-color: $darkblue;
+                color: white
+            }
         }
 
         .manyPhotos {
@@ -89,10 +92,16 @@
     }
 }
 
-.show {
-    display: block;
+.createPostShow {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    z-index: 899;
 }
 
-.hide {
-    display: none;
+.createPostHide {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    z-index: -899;
 }

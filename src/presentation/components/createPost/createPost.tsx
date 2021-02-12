@@ -24,7 +24,6 @@ interface PhotoReference {
 
 const CreatePost = (props: CreatePostProps): JSX.Element => {
     const { sessionData, isOpen, onClose } = props;
-    console.log(sessionData);
     const photoRef = useRef<HTMLInputElement>(null);
 
     const [tab, setTab] = useState('onePhoto');
@@ -82,11 +81,15 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
 
     const handlePost = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('attempting to post');
+        console.log(sessionData);
     };
 
     return (
-        <div className={`createPost ${isOpen === true ? 'show' : 'hide'}`}>
+        <div
+            className={`createPost ${
+                isOpen === true ? 'createPostShow' : 'createPostHide'
+            }`}
+        >
             <div className="content">
                 <div className="options">
                     <button
@@ -136,7 +139,11 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                             )
                         )}
                         <div className="post">
-                            <button disabled onClick={handlePost}>
+                            <button
+                                disabled={O.isNone(onePhotoPreview)}
+                                onClick={handlePost}
+                                className={O.isSome(onePhotoPreview) ? 'readyToPost' : ''}
+                            >
                                 Publicar
                             </button>
                             <button onClick={handleCleanUpAndClose}>Cerrar</button>

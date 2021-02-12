@@ -46,6 +46,22 @@ const Home = (): JSX.Element => {
                             <AddIcon />
                         </button>
                     </div>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
+                    <button>Test</button>
                 </div>
             );
         default:
