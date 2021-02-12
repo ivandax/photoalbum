@@ -35,7 +35,7 @@ const Home = (): JSX.Element => {
             return <Loader />;
         case 'successful':
             return (
-                <div className="home">
+                <div className={`home ${openCreatePost ? 'blocked' : ''}`}>
                     <CreatePost
                         isOpen={openCreatePost}
                         sessionData={sessionData.data}
@@ -46,22 +46,6 @@ const Home = (): JSX.Element => {
                             <AddIcon />
                         </button>
                     </div>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
                 </div>
             );
         default:
