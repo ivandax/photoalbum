@@ -5,8 +5,9 @@ import { flow } from 'fp-ts/lib/function';
 
 //import { login } from '../../../persistence/auth';
 import { UserWithId } from '../../../persistence/users';
+import { uploadFile } from '../../../persistence/posts';
 
-//import FormInput from '../formInput';
+import FormInput from '../formInput';
 
 import './createPost.scss';
 import placeholder from '../../../style/images/placeholder.png';
@@ -31,10 +32,13 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     const [onePhotoPreview, setOnePhotoPreview] = useState<O.Option<PhotoReference>>(
         O.none
     );
+    const [onePhotoTitle, setOnePhotoTitle] = useState('');
+    const [fileUploadPercent, setFileUploadPercent] = useState(0);
 
     const handleCleanUpAndClose = (): void => {
         setOnePhotoMessage(O.none);
         setOnePhotoPreview(O.none);
+        setOnePhotoTitle('');
         onClose();
     };
 
@@ -82,6 +86,19 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     const handlePost = async (event: React.FormEvent) => {
         event.preventDefault();
         console.log(sessionData);
+        pipe(
+            onePhotoPreview,
+            O.map(async (photoRef) => {
+                const resolution = await uploadFile(
+                    photoRef.handle,
+                    'xxx',
+                    setFileUploadPercent
+                );
+                resolution.status === 'failed'
+                    ? setOnePhotoMessage(O.some(resolution.error))
+                    : setOnePhotoMessage(O.some(resolution.downloadUrl));
+            })
+        );
     };
 
     return (
@@ -135,6 +152,28 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                     <div>
                                         <p>{message}</p>
                                     </div>
+                                )
+                            )
+                        )}
+                        {pipe(
+                            onePhotoPreview,
+                            O.fold(
+                                () => null,
+                                () => (
+                                    <>
+                                        <div className="postProps">
+                                            <FormInput
+                                                placeholder="Titulo (Opcional)"
+                                                value={onePhotoTitle}
+                                                type="text"
+                                                onChange={(value) =>
+                                                    setOnePhotoTitle(value)
+                                                }
+                                                className="photoTitle"
+                                            />
+                                        </div>
+                                        <div>{fileUploadPercent}</div>
+                                    </>
                                 )
                             )
                         )}
