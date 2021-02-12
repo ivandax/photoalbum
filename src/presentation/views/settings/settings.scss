@@ -3,7 +3,7 @@
 
 .settings {
     height: 100vh;
-    background-color: $golden;
+    background-color: $secondary;
     @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
 
     & > div {

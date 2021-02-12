@@ -9,11 +9,17 @@ import { UserWithId } from '../../../persistence/users';
 //import FormInput from '../formInput';
 
 import './createPost.scss';
+import placeholder from '../../../style/images/placeholder.png';
 
 interface CreatePostProps {
     isOpen: boolean;
     onClose: () => void;
     sessionData: UserWithId;
+}
+
+interface PhotoReference {
+    handle: File;
+    base64: string;
 }
 
 const CreatePost = (props: CreatePostProps): JSX.Element => {
@@ -23,6 +29,15 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
 
     const [tab, setTab] = useState('onePhoto');
     const [onePhotoMessage, setOnePhotoMessage] = useState<O.Option<string>>(O.none);
+    const [onePhotoPreview, setOnePhotoPreview] = useState<O.Option<PhotoReference>>(
+        O.none
+    );
+
+    const handleCleanUpAndClose = (): void => {
+        setOnePhotoMessage(O.none);
+        setOnePhotoPreview(O.none);
+        onClose();
+    };
 
     const handleLoadPhoto = (): void => {
         setOnePhotoMessage(O.none);
@@ -36,8 +51,31 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                 )
             ),
             O.fold(
-                () => setOnePhotoMessage(O.some('No hemos podido cargar la foto')),
-                (file) => console.log(file)
+                () =>
+                    setOnePhotoMessage(
+                        O.some('No hemos podido leer la archivo como imagen')
+                    ),
+                (fileOrUndefined) => {
+                    pipe(
+                        O.fromNullable(fileOrUndefined),
+                        O.map((file) => {
+                            const reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = () => {
+                                const result = reader.result;
+                                if (typeof result === 'string') {
+                                    setOnePhotoPreview(
+                                        O.some({ handle: file, base64: result })
+                                    );
+                                } else {
+                                    setOnePhotoMessage(
+                                        O.some('No hemos podido leer la imagen')
+                                    );
+                                }
+                            };
+                        })
+                    );
+                }
             )
         );
     };
@@ -65,7 +103,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                     </button>
                 </div>
                 {tab === 'onePhoto' ? (
-                    <>
+                    <div className="onePhoto">
                         <div className="upload">
                             <input
                                 type="file"
@@ -76,6 +114,15 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                 onChange={handleLoadPhoto}
                             />
                             <label htmlFor="files">Subir foto</label>
+                        </div>
+                        <div className="picPreview">
+                            <img
+                                src={pipe(
+                                    onePhotoPreview,
+                                    O.map((photoRef) => photoRef.base64),
+                                    O.getOrElse(() => placeholder)
+                                )}
+                            />
                         </div>
                         {pipe(
                             onePhotoMessage,
@@ -92,11 +139,13 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                             <button disabled onClick={handlePost}>
                                 Publicar
                             </button>
-                            <button onClick={onClose}>Cerrar</button>
+                            <button onClick={handleCleanUpAndClose}>Cerrar</button>
                         </div>
-                    </>
+                    </div>
                 ) : null}
-                {tab === 'manyPhotos' ? <>Esta sección esta en construcción</> : null}
+                {tab === 'manyPhotos' ? (
+                    <div className="manyPhotos">Esta sección esta en construcción</div>
+                ) : null}
             </div>
         </div>
     );

@@ -3,7 +3,7 @@
 
 .home{
     height: 100%;
-    background-color: $golden;
+    background-color: $secondary;
     @include flex-complete($direction: column, $justify: flex-start, $align: center);
 
     .toolbar{
@@ -14,7 +14,7 @@
             border: none;
             padding: 8px;
             width: 90px;
-            background-color: $golden;
+            background-color: $secondary;
         }
     }
 }
