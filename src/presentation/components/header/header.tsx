@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { HeaderToggleState } from '../../../redux/headerToggleReducer';
 
 import './header.scss';
+import littlePizza from '../../../style/images/littlepizza.png';
 
 interface State {
     headerToggle: HeaderToggleState;
@@ -17,7 +18,11 @@ const Header = (): JSX.Element => {
     return (
         <header className={`header ${displayMobileHeader === true ? 'show' : 'hide'}`}>
             <div className="left">
-                <h3>Pizza Pizza Pizza</h3>
+                <h3>
+                    <img src={littlePizza} alt="little pizza image" />
+                    <img src={littlePizza} alt="little pizza image" />
+                    <img src={littlePizza} alt="little pizza image" />
+                </h3>
                 <NavLink to={'/home'} activeClassName="activeRoute">
                     Inicio
                 </NavLink>

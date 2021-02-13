@@ -9,17 +9,20 @@ interface Comment {
     name: string;
     createdOn: number;
     text: string;
+    textColor: string;
 }
 
 export interface Post {
+    postId: string;
     title: string;
     postedBy: string;
     postedByName: string;
     createdOn: number;
     updatedOn: number;
     comments: Comment[];
-    picPreview: string;
-    file: string;
+    //picPreview: string;
+    fileUrl: string;
+    categories: string[];
 }
 
 interface UploadSuccess {
@@ -28,6 +31,14 @@ interface UploadSuccess {
 }
 
 interface UploadFailure {
+    status: 'failed';
+    error: string;
+}
+interface PostSuccess {
+    status: 'successful';
+}
+
+interface PostFailure {
     status: 'failed';
     error: string;
 }
@@ -77,10 +88,15 @@ function getDbInstance() {
     return db;
 }
 
-const addPost = async (item: Post, id: string): Promise<void> => {
-    console.log('Adding post');
-    const db = getDbInstance();
-    await db.collection('posts').doc(id).set(item, { merge: true });
+const addPost = async (item: Post, id: string): Promise<PostSuccess | PostFailure> => {
+    try {
+        console.log('Adding post');
+        const db = getDbInstance();
+        await db.collection('posts').doc(id).set(item, { merge: true });
+        return { status: 'successful' };
+    } catch (e) {
+        return { status: 'failed', error: `Error en post: ${e.message}` };
+    }
 };
 
 // const updateUser = async (

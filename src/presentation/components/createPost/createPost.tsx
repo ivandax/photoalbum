@@ -5,7 +5,7 @@ import { flow } from 'fp-ts/lib/function';
 
 //import { login } from '../../../persistence/auth';
 import { UserWithId } from '../../../persistence/users';
-import { uploadFile } from '../../../persistence/posts';
+import { uploadFile, addPost } from '../../../persistence/posts';
 
 import FormInput from '../formInput';
 
@@ -34,11 +34,14 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     );
     const [onePhotoTitle, setOnePhotoTitle] = useState('');
     const [fileUploadPercent, setFileUploadPercent] = useState(0);
+    const [localUpdateProcess, setLocalUpdateProcess] = useState('resolved');
 
     const handleCleanUpAndClose = (): void => {
         setOnePhotoMessage(O.none);
         setOnePhotoPreview(O.none);
         setOnePhotoTitle('');
+        setFileUploadPercent(0);
+        setLocalUpdateProcess('resolved');
         onClose();
     };
 
@@ -85,18 +88,50 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
 
     const handlePost = async (event: React.FormEvent) => {
         event.preventDefault();
+        setLocalUpdateProcess('uploading');
         console.log(sessionData);
         pipe(
             onePhotoPreview,
             O.map(async (photoRef) => {
-                const resolution = await uploadFile(
+                const uploadedPhoto = await uploadFile(
                     photoRef.handle,
-                    'xxx',
+                    photoRef.handle.name,
                     setFileUploadPercent
                 );
-                resolution.status === 'failed'
-                    ? setOnePhotoMessage(O.some(resolution.error))
-                    : setOnePhotoMessage(O.some(resolution.downloadUrl));
+                if (uploadedPhoto.status === 'failed') {
+                    setOnePhotoMessage(O.some(uploadedPhoto.error));
+                    setLocalUpdateProcess('resolved');
+                } else {
+                    setLocalUpdateProcess('posting');
+                    const now = +new Date();
+                    const userIdentifier =
+                        sessionData.name !== ''
+                            ? sessionData.name
+                            : pipe(
+                                  O.fromNullable(sessionData.email),
+                                  O.getOrElse(() => sessionData.id)
+                              );
+                    const postId = `${sessionData.id}${now}`;
+                    const newPost = {
+                        postId,
+                        title: onePhotoTitle,
+                        postedBy: sessionData.id,
+                        postedByName: userIdentifier,
+                        createdOn: now,
+                        updatedOn: now,
+                        comments: [],
+                        //picPreview: photoRef.base64,
+                        fileUrl: uploadedPhoto.downloadUrl,
+                        categories: [],
+                    };
+                    const postedPhoto = await addPost(newPost, postId);
+                    if (postedPhoto.status === 'failed') {
+                        setOnePhotoMessage(O.some(postedPhoto.error));
+                    } else{
+                        handleCleanUpAndClose();
+                    }
+                    setLocalUpdateProcess('resolved');
+                }
             })
         );
     };
@@ -107,7 +142,17 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                 isOpen === true ? 'createPostShow' : 'createPostHide'
             }`}
         >
-            <div className="content">
+            <div className="dialogContent">
+                {localUpdateProcess === 'uploading' ? (
+                    <div className="dialogLoader">
+                        <div>Subiendo foto... {fileUploadPercent.toFixed()}%</div>
+                    </div>
+                ) : null}
+                {localUpdateProcess === 'posting' ? (
+                    <div className="dialogLoader">
+                        <div>Finalizando post...</div>
+                    </div>
+                ) : null}
                 <div className="options">
                     <button
                         className={`left ${tab === 'onePhoto' ? 'active' : ''}`}
@@ -129,7 +174,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                 type="file"
                                 id="files"
                                 className="hidden"
-                                accept="image/png, image/jpeg image/jpg"
+                                accept="image/*"
                                 ref={photoRef}
                                 onChange={handleLoadPhoto}
                             />
@@ -142,6 +187,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                     O.map((photoRef) => photoRef.base64),
                                     O.getOrElse(() => placeholder)
                                 )}
+                                alt="image preview for post"
                             />
                         </div>
                         {pipe(
@@ -172,7 +218,6 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                                 className="photoTitle"
                                             />
                                         </div>
-                                        <div>{fileUploadPercent}</div>
                                     </>
                                 )
                             )
