@@ -15,8 +15,10 @@
     .left, .right{
         @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
         width: 100%;
-        h3{
-            padding: 8px;
+        .logo{
+            img{
+                width: 30px;
+            }
         }
         a{
             width: 100%;

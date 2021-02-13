@@ -18,11 +18,11 @@ const Header = (): JSX.Element => {
     return (
         <header className={`header ${displayMobileHeader === true ? 'show' : 'hide'}`}>
             <div className="left">
-                <h3>
+                <div className="logo">
                     <img src={littlePizza} alt="little pizza image" />
                     <img src={littlePizza} alt="little pizza image" />
                     <img src={littlePizza} alt="little pizza image" />
-                </h3>
+                </div>
                 <NavLink to={'/home'} activeClassName="activeRoute">
                     Inicio
                 </NavLink>
