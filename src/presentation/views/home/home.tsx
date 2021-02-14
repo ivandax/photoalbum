@@ -7,6 +7,9 @@ import { Add as AddIcon } from '@material-ui/icons';
 import Loader from '../../components/loader';
 import CreatePost from '../../components/createPost';
 
+//persistence
+import { getPostImage } from '../../../persistence/posts';
+
 //hooks
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
 
@@ -21,6 +24,14 @@ const Home = (): JSX.Element => {
     const sessionData = useSelector((state: State) => state.session.sessionData);
 
     const [openCreatePost, setOpenCreatePost] = useState(false);
+
+    const [test, setTest] = useState('');
+    const getTestImage = async () => {
+        const url = await getPostImage('quarantine.png');
+        if (url) {
+            setTest(url);
+        }
+    };
 
     useEffect(() => {
         if (sessionData.status === 'failed') {
@@ -41,6 +52,8 @@ const Home = (): JSX.Element => {
                         sessionData={sessionData.data}
                         onClose={() => setOpenCreatePost(false)}
                     />
+                    <button onClick={getTestImage}>GetImage</button>
+                    <img src={test} />
                     <div className="toolbar">
                         <button onClick={() => setOpenCreatePost(true)}>
                             <AddIcon />

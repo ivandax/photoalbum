@@ -20,14 +20,17 @@ export interface Post {
     createdOn: number;
     updatedOn: number;
     comments: Comment[];
-    //picPreview: string;
-    fileUrl: string;
+    fileName: string;
     categories: string[];
+    //picPreview: string;
+    //fileUrl: string;
+    //storageBucket: string;
 }
 
 interface UploadSuccess {
     status: 'successful';
     downloadUrl: string;
+    bucket: string;
 }
 
 interface UploadFailure {
@@ -62,6 +65,7 @@ const uploadFile = (
     return new Promise((resolve, reject) => {
         const storageRef = firebase.storage().ref().child(`posts/${identifier}`);
         const uploadTask = storageRef.put(file);
+        const bucket = storageRef.bucket;
 
         uploadTask.on(
             'state_changed',
@@ -74,7 +78,7 @@ const uploadFile = (
             },
             async () => {
                 const downloadUrl: string = await uploadTask.snapshot.ref.getDownloadURL();
-                resolve({ status: 'successful', downloadUrl });
+                resolve({ status: 'successful', downloadUrl, bucket });
             }
         );
     });
@@ -97,6 +101,12 @@ const addPost = async (item: Post, id: string): Promise<PostSuccess | PostFailur
     } catch (e) {
         return { status: 'failed', error: `Error en post: ${e.message}` };
     }
+};
+
+const getPostImage = async (filename: string): Promise<string> => {
+    const ref = firebase.storage().ref().child(`posts/${filename}`);
+    const file = await ref.getDownloadURL();
+    return file;
 };
 
 // const updateUser = async (
@@ -145,4 +155,4 @@ const addPost = async (item: Post, id: string): Promise<PostSuccess | PostFailur
 //     }
 // }
 
-export { addPost, uploadFile };
+export { addPost, uploadFile, getPostImage };

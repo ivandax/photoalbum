@@ -89,7 +89,6 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     const handlePost = async (event: React.FormEvent) => {
         event.preventDefault();
         setLocalUpdateProcess('uploading');
-        console.log(sessionData);
         pipe(
             onePhotoPreview,
             O.map(async (photoRef) => {
@@ -120,14 +119,16 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                         createdOn: now,
                         updatedOn: now,
                         comments: [],
-                        //picPreview: photoRef.base64,
-                        fileUrl: uploadedPhoto.downloadUrl,
+                        fileName: photoRef.handle.name,
                         categories: [],
+                        //picPreview: photoRef.base64,
+                        //fileUrl: uploadedPhoto.downloadUrl,
+                        //storageBucket: uploadedPhoto.bucket,
                     };
                     const postedPhoto = await addPost(newPost, postId);
                     if (postedPhoto.status === 'failed') {
                         setOnePhotoMessage(O.some(postedPhoto.error));
-                    } else{
+                    } else {
                         handleCleanUpAndClose();
                     }
                     setLocalUpdateProcess('resolved');
