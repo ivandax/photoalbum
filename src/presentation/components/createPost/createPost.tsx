@@ -3,7 +3,6 @@ import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
 import { flow } from 'fp-ts/lib/function';
 
-//import { login } from '../../../persistence/auth';
 import { UserWithId } from '../../../persistence/users';
 import { uploadFile, addPost } from '../../../persistence/posts';
 

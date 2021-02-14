@@ -13,7 +13,7 @@ type SuccessfulOperation<T> = {
 
 type FailedOperation<E> = {
     status: 'failed';
-    error?: E;
+    error: E;
 };
 
 type AsyncOp<T, E> =

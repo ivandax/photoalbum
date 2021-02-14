@@ -45,6 +45,14 @@ interface PostFailure {
     status: 'failed';
     error: string;
 }
+interface ImageUrlSuccess {
+    status: 'successful';
+    url: string;
+}
+interface ImageUrlFailure {
+    status: 'failed';
+    error: string;
+}
 
 //Functions
 
@@ -103,10 +111,20 @@ const addPost = async (item: Post, id: string): Promise<PostSuccess | PostFailur
     }
 };
 
-const getPostImage = async (filename: string): Promise<string> => {
-    const ref = firebase.storage().ref().child(`posts/${filename}`);
-    const file = await ref.getDownloadURL();
-    return file;
+const getPostImage = async (
+    fileName: string
+): Promise<ImageUrlSuccess | ImageUrlFailure> => {
+    try {
+        const ref = firebase.storage().ref().child(`posts/${fileName}`);
+        const url: string = await ref.getDownloadURL();
+        return { status: 'successful', url };
+    } catch (e) {
+        return { status: 'failed', error: `Error al obtener imagen: ${e.message}` };
+    }
+};
+
+const getPosts = (): void => {
+    console.log('getting posts');
 };
 
 // const updateUser = async (
@@ -155,4 +173,4 @@ const getPostImage = async (filename: string): Promise<string> => {
 //     }
 // }
 
-export { addPost, uploadFile, getPostImage };
+export { addPost, uploadFile, getPostImage, getPosts };
