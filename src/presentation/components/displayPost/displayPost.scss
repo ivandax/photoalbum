@@ -2,5 +2,13 @@
 @import '../../../style/variables.scss';
 
 .displayPost {
-    margin: 0;
+    width: 100%;
+
+    .figureContainer {
+        figure {
+            .postImage {
+                max-width: 280px;
+            }
+        }
+    }
 }

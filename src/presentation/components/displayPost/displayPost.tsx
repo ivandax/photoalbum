@@ -9,11 +9,12 @@ import './displayPost.scss';
 type GetPhotoOp = AsyncOp<string, string>;
 
 interface DisplayPostProps {
+    key: string;
     sessionData: UserWithId;
     post: Post;
 }
 
-const Timeline = (props: DisplayPostProps): JSX.Element => {
+const DisplayPost = (props: DisplayPostProps): JSX.Element => {
     const { post } = props;
 
     const [photoSrc, setPhotoSrc] = useState<GetPhotoOp>({ status: 'pending' });
@@ -39,11 +40,12 @@ const Timeline = (props: DisplayPostProps): JSX.Element => {
                 <div>Loading</div>
             ) : null}
             {photoSrc.status === 'successful' ? (
-                <div>
+                <div className="figureContainer">
                     <figure>
                         <img
                             alt={post.title === '' ? post.postedByName : post.title}
                             src={photoSrc.data}
+                            className="postImage"
                         />
                         <figcaption>
                             {post.title}, publicado por: {post.postedByName}
@@ -56,4 +58,4 @@ const Timeline = (props: DisplayPostProps): JSX.Element => {
     );
 };
 
-export default Timeline;
+export default DisplayPost;

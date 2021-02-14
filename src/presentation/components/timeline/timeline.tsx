@@ -1,25 +1,55 @@
-import React from 'react';
-// import * as O from 'fp-ts/lib/Option';
-// import { pipe } from 'fp-ts/pipeable';
-// import { flow } from 'fp-ts/lib/function';
+import React, { useState, useEffect } from 'react';
 
 //persistence
-//import { Post } from '../../../persistence/posts';
+import { Post, getRealtimePosts } from '../../../persistence/posts';
 import { UserWithId } from '../../../persistence/users';
+
+import DisplayPost from '../displayPost';
 
 import './timeline.scss';
 
+type GetPostsOp = AsyncOp<Post[], string>;
 interface TimelineProps {
     sessionData: UserWithId;
 }
 
 const Timeline = (props: TimelineProps): JSX.Element => {
     const { sessionData } = props;
-    console.log(sessionData);
 
-    //const [postList, setPostList] = useState<Post[]>([]);
+    const [postList, setPostList] = useState<GetPostsOp>({ status: 'pending' });
 
-    return <div className="timeline"></div>;
+    useEffect(() => {
+        const onGetPosts = async () => {
+            setPostList({ status: 'ongoing' });
+            const result = await getRealtimePosts();
+            if (typeof result === 'string') {
+                setPostList({ status: 'failed', error: result });
+            } else {
+                setPostList({ status: 'successful', data: result });
+            }
+        };
+        if (postList.status === 'pending') {
+            onGetPosts();
+        }
+    }, [postList.status]);
+
+    return (
+        <div className="timeline">
+            {postList.status === 'pending' || postList.status === 'ongoing' ? (
+                <div>Loading...</div>
+            ) : null}
+            {postList.status === 'failed' ? <div>{postList.error}</div> : null}
+            {postList.status === 'successful'
+                ? postList.data.map((post) => (
+                      <DisplayPost
+                          key={post.postId}
+                          sessionData={sessionData}
+                          post={post}
+                      />
+                  ))
+                : null}
+        </div>
+    );
 };
 
 export default Timeline;

@@ -41,7 +41,15 @@ const Settings = (): JSX.Element => {
                     <div>
                         <h3>Usted tiene una sesión iniciada</h3>
                         <p>Loggeado como: {sessionData.data.email}</p>
-                        <EditSettings userData={sessionData.data} />
+                        {sessionData.data.role === 'member' ? (
+                            <EditSettings userData={sessionData.data} />
+                        ) : (
+                            <p>
+                                El administrador debe proporcionarle derechos de creación
+                                y edición.
+                            </p>
+                        )}
+
                         {sessionData.data.isAdmin ? (
                             <div className="adminLink">
                                 <h3>Admin Panel</h3>

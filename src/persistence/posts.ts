@@ -56,14 +56,14 @@ interface ImageUrlFailure {
 
 //Functions
 
-// function parseDoc(
-//     doc: firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
-// ) {
-//     const castedDoc = doc.data() as Post;
-//     if (castedDoc) {
-//         return { ...castedDoc, id: doc.id };
-//     }
-// }
+function parsePost(
+    doc: firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
+) {
+    const castedDoc = doc.data() as Post;
+    if (castedDoc) {
+        return castedDoc;
+    }
+}
 
 const uploadFile = (
     file: File,
@@ -123,9 +123,23 @@ const getPostImage = async (
     }
 };
 
-const getPosts = (): void => {
-    console.log('getting posts');
-};
+async function getRealtimePosts(): Promise<Post[] | string> {
+    const db = getDbInstance();
+    const posts: Post[] = [];
+    try {
+        db.collection('posts').onSnapshot((querySnapshop) => {
+            querySnapshop.forEach((post) => {
+                const data = parsePost(post);
+                if (data) {
+                    posts.push(data);
+                }
+            });
+        });
+        return posts;
+    } catch (e) {
+        return `Error cargando posts - ${e.message}`;
+    }
+}
 
 // const updateUser = async (
 //     item: PartialUserWithId,
@@ -173,4 +187,4 @@ const getPosts = (): void => {
 //     }
 // }
 
-export { addPost, uploadFile, getPostImage, getPosts };
+export { addPost, uploadFile, getPostImage, getRealtimePosts };

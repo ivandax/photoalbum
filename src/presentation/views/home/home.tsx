@@ -6,6 +6,7 @@ import { Add as AddIcon } from '@material-ui/icons';
 //components
 import Loader from '../../components/loader';
 import CreatePost from '../../components/createPost';
+import Timeline from '../../components/timeline';
 
 //hooks
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
@@ -34,8 +35,9 @@ const Home = (): JSX.Element => {
         case 'failed':
             return <Loader />;
         case 'successful':
-            return (
+            return sessionData.data.role === 'member' ? (
                 <div className={`home ${openCreatePost ? 'blocked' : ''}`}>
+                    <Timeline sessionData={sessionData.data} />
                     <CreatePost
                         isOpen={openCreatePost}
                         sessionData={sessionData.data}
@@ -47,7 +49,15 @@ const Home = (): JSX.Element => {
                         </button>
                     </div>
                 </div>
+            ) : (
+                <div className="securityNotice">
+                    <p>
+                        El administrador debe proporcionarle derechos de creación y
+                        edición.
+                    </p>
+                </div>
             );
+
         default:
             return <></>;
     }

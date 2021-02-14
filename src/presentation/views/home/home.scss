@@ -39,3 +39,11 @@
     overflow: hidden;
     position: fixed;
 }
+
+.securityNotice {
+    @include flex-complete($direction: row, $justify: center, $align: flex-start);
+    padding: 16px;
+    height: 100vh;
+    width: 100%;
+    background-color: $secondary;
+}
