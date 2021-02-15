@@ -3,11 +3,40 @@
 
 .displayPost {
     width: 100%;
+    background-color: white;
+    margin: 16px 0 16px 0;
+    border-radius: 8px;
+    box-shadow: $boxShadowSmall;
+    @media only screen and (min-width: $tablet) {
+        margin: 20px 0 24px 0;
+    }
 
     .figureContainer {
         figure {
+            max-width: 280px;
+            @media only screen and (min-width: $tablet) {
+                max-width: 500px;
+            }
+            @include flex-complete($direction: column, $justify: center, $align: center);
             .postImage {
-                max-width: 280px;
+                width: 280px;
+                padding: 4px;
+                @media only screen and (min-width: $tablet) {
+                    width: 500px;
+                }
+            }
+            figcaption {
+                padding: 4px;
+                font-weight: bold;
+                word-wrap: break-word;
+            }
+            span {
+                font-size: 10px;
+                padding: 4px;
+                @media only screen and (min-width: $tablet) {
+                    padding: 4px;
+                    font-size: 12px;
+                }
             }
         }
     }

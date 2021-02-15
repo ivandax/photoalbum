@@ -216,6 +216,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                                     setOnePhotoTitle(value)
                                                 }
                                                 className="photoTitle"
+                                                maxLength={120}
                                             />
                                         </div>
                                     </>

@@ -47,9 +47,8 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                             src={photoSrc.data}
                             className="postImage"
                         />
-                        <figcaption>
-                            {post.title}, publicado por: {post.postedByName}
-                        </figcaption>
+                        <figcaption>{post.title}</figcaption>
+                        <span>Publicado por {post.postedByName}</span>
                     </figure>
                 </div>
             ) : null}
