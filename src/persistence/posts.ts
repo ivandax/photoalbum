@@ -123,22 +123,49 @@ const getPostImage = async (
     }
 };
 
-async function getRealtimePosts(): Promise<Post[] | string> {
+async function getPosts(): Promise<Post[] | string> {
     const db = getDbInstance();
     const posts: Post[] = [];
     try {
-        db.collection('posts').onSnapshot((querySnapshop) => {
-            querySnapshop.forEach((post) => {
-                const data = parsePost(post);
-                if (data) {
-                    posts.push(data);
-                }
+        await db
+            .collection('posts')
+            .get()
+            .then((querySnapshop) => {
+                querySnapshop.forEach((post) => {
+                    const data = parsePost(post);
+                    if (data) {
+                        console.log(data);
+                        posts.push(data);
+                    }
+                });
             });
-        });
         return posts;
     } catch (e) {
         return `Error cargando posts - ${e.message}`;
     }
+}
+
+function getRealTimePosts(
+    setPostsState: React.Dispatch<React.SetStateAction<AsyncOp<Post[], string>>>
+): void {
+    const db = getDbInstance();
+    db.collection('posts')
+        .orderBy('updatedOn', 'desc')
+        .onSnapshot((querySnapshop) => {
+            try {
+                const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {
+                    const parsed = parsePost(docSnap);
+                    if (parsed) {
+                        return [...soFar, parsed];
+                    } else {
+                        return soFar;
+                    }
+                }, []);
+                setPostsState({ status: 'successful', data: posts });
+            } catch (e) {
+                setPostsState({ status: 'failed', error: `Error obteniendo posts` });
+            }
+        });
 }
 
 // const updateUser = async (
@@ -187,4 +214,4 @@ async function getRealtimePosts(): Promise<Post[] | string> {
 //     }
 // }
 
-export { addPost, uploadFile, getPostImage, getRealtimePosts };
+export { addPost, uploadFile, getPostImage, getPosts, getRealTimePosts };

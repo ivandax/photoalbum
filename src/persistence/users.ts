@@ -66,7 +66,7 @@ async function getUser(id: string): Promise<UserWithId | null | undefined> {
 
 async function getUsers(): Promise<UserWithId[] | string> {
     const db = getDbInstance();
-    const results: UserWithId[] = [];
+    const users: UserWithId[] = [];
     try {
         await db
             .collection('users')
@@ -76,11 +76,11 @@ async function getUsers(): Promise<UserWithId[] | string> {
                 querySnapshot.forEach((doc) => {
                     const data = parseDoc(doc);
                     if (data) {
-                        results.push(data);
+                        users.push(data);
                     }
                 });
             });
-        return results;
+        return users;
     } catch (e) {
         return `Error - ${e.message}`;
     }
