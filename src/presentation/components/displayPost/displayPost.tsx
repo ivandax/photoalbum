@@ -37,7 +37,9 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
     return (
         <div className="displayPost">
             {photoSrc.status === 'pending' || photoSrc.status === 'ongoing' ? (
-                <div>Loading</div>
+                <div className="postLoader">
+                    <div>Cargando...</div>
+                </div>
             ) : null}
             {photoSrc.status === 'successful' ? (
                 <div className="figureContainer">

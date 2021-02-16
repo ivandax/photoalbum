@@ -177,6 +177,9 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                 accept="image/*"
                                 ref={photoRef}
                                 onChange={handleLoadPhoto}
+                                onClick={(event) => {
+                                    event.currentTarget.value = "";
+                                }}
                             />
                             <label htmlFor="files">Subir foto</label>
                         </div>
