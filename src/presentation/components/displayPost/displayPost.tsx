@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Comment as CommentIcon } from '@material-ui/icons';
 
 //persistence
 import { Post, getPostImage } from '../../../persistence/posts';
 import { UserWithId } from '../../../persistence/users';
+
+//components
+import CommentSection from '../commentSection';
 
 import './displayPost.scss';
 
@@ -15,9 +19,10 @@ interface DisplayPostProps {
 }
 
 const DisplayPost = (props: DisplayPostProps): JSX.Element => {
-    const { post } = props;
+    const { post, sessionData } = props;
 
     const [photoSrc, setPhotoSrc] = useState<GetPhotoOp>({ status: 'pending' });
+    const [openCommentSection, setOpenCommentSection] = useState(false);
 
     useEffect(() => {
         const onGetPhoto = async () => {
@@ -52,6 +57,24 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         <figcaption>{post.title}</figcaption>
                         <span>Publicado por {post.postedByName}</span>
                     </figure>
+                    <div
+                        className={`comments ${
+                            post.comments.length > 0 ? 'withLength' : ''
+                        }`}
+                    >
+                        {post.comments.length > 0 ? (
+                            <div>{`Comentarios: ${post.comments.length}`}</div>
+                        ) : null}
+                        <button onClick={() => setOpenCommentSection(true)}>
+                            <CommentIcon />
+                        </button>
+                    </div>
+                    <CommentSection
+                        isOpen={openCommentSection}
+                        onClose={() => setOpenCommentSection(false)}
+                        sessionData={sessionData}
+                        post={post}
+                    />
                 </div>
             ) : null}
             {photoSrc.status === 'failed' ? <div>{photoSrc.error}</div> : null}

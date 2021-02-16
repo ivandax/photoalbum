@@ -177,7 +177,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                 accept="image/*"
                                 ref={photoRef}
                                 onChange={handleLoadPhoto}
-                                onClick={(event) => {
+                                onClick={(event) => {//resets file on input
                                     event.currentTarget.value = "";
                                 }}
                             />
