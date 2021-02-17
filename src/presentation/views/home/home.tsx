@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Add as AddIcon } from '@material-ui/icons';
+
+//reducer actions
+import { setCommentSectionClose } from '../../../redux/commentSectionReducer';
 
 //components
 import Loader from '../../components/loader';
 import CreatePost from '../../components/createPost';
 import Timeline from '../../components/timeline';
+import CommentSection from '../../components/commentSection';
 
 //hooks
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
@@ -19,7 +23,9 @@ import './home.scss';
 const Home = (): JSX.Element => {
     useResetHeaderToggle();
     const history = useHistory();
+    const dispatch = useDispatch();
     const sessionData = useSelector((state: State) => state.session.sessionData);
+    const commentSection = useSelector((state: State) => state.commentSection);
 
     const [openCreatePost, setOpenCreatePost] = useState(false);
 
@@ -36,8 +42,18 @@ const Home = (): JSX.Element => {
             return <Loader />;
         case 'successful':
             return sessionData.data.role === 'member' ? (
-                <div className={`home ${openCreatePost ? 'blocked' : ''}`}>
-                    <Timeline sessionData={sessionData.data} />
+                <div
+                    className={`home ${
+                        openCreatePost || commentSection.isOpen ? 'blocked' : ''
+                    }`}
+                >
+                    <Timeline />
+                    <CommentSection
+                        isOpen={commentSection.isOpen}
+                        onClose={() => dispatch(setCommentSectionClose())}
+                        sessionData={sessionData.data}
+                        post={commentSection.post}
+                    />
                     <CreatePost
                         isOpen={openCreatePost}
                         sessionData={sessionData.data}

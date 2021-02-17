@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Comment as CommentIcon } from '@material-ui/icons';
 
 //persistence
 import { Post, getPostImage } from '../../../persistence/posts';
-import { UserWithId } from '../../../persistence/users';
 
-//components
-import CommentSection from '../commentSection';
+//actions
+import { setCommentSectionOpen } from '../../../redux/commentSectionReducer';
 
 import './displayPost.scss';
 
@@ -14,15 +14,14 @@ type GetPhotoOp = AsyncOp<string, string>;
 
 interface DisplayPostProps {
     key: string;
-    sessionData: UserWithId;
     post: Post;
 }
 
 const DisplayPost = (props: DisplayPostProps): JSX.Element => {
-    const { post, sessionData } = props;
+    const dispatch = useDispatch();
+    const { post } = props;
 
     const [photoSrc, setPhotoSrc] = useState<GetPhotoOp>({ status: 'pending' });
-    const [openCommentSection, setOpenCommentSection] = useState(false);
 
     useEffect(() => {
         const onGetPhoto = async () => {
@@ -65,16 +64,10 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         {post.comments.length > 0 ? (
                             <div>{`Comentarios: ${post.comments.length}`}</div>
                         ) : null}
-                        <button onClick={() => setOpenCommentSection(true)}>
+                        <button onClick={() => dispatch(setCommentSectionOpen(post))}>
                             <CommentIcon />
                         </button>
                     </div>
-                    <CommentSection
-                        isOpen={openCommentSection}
-                        onClose={() => setOpenCommentSection(false)}
-                        sessionData={sessionData}
-                        post={post}
-                    />
                 </div>
             ) : null}
             {photoSrc.status === 'failed' ? <div>{photoSrc.error}</div> : null}

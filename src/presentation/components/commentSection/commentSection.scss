@@ -13,18 +13,49 @@
 
     .commentSectionContent {
         width: 100%;
-        padding: 8px;
-        @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
-        .heading{
+        @include flex-complete(
+            $direction: column,
+            $justify: flex-start,
+            $align: flex-start
+        );
+        .heading {
             width: 100%;
-            @include flex-complete($direction: row, $justify: space-between, $align: flex-start);
-            button{
+            padding: 8px;
+            @include flex-complete(
+                $direction: row,
+                $justify: space-between,
+                $align: flex-start
+            );
+            button {
                 border: none;
                 background-color: white;
             }
         }
         @media only screen and (min-width: $tablet) {
             width: 320px;
+        }
+
+        .commentInput {
+            width: 100%;
+            padding: 8px;
+            background-color: $primary;
+            position: fixed;
+            bottom: 0;
+            @include flex-complete(
+                $direction: row,
+                $justify: flex-start,
+                $align: center
+            );
+            textarea {
+                width: 100%;
+                padding: 4px;
+                border-radius: 4px;
+                border: none;
+            }
+            button{
+                margin-left: 8px;
+                padding: 4px 0 4px 0;
+            }
         }
     }
 }
@@ -33,12 +64,12 @@
     visibility: visible;
     opacity: 1;
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    z-index: 899;
+    z-index: 1500;
 }
 
 .commentSectionHide {
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    z-index: -899;
+    z-index: -1500;
 }
