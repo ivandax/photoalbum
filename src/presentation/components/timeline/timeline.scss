@@ -11,4 +11,8 @@
     border-radius: 8px;
     margin-top: 16px;
     box-shadow: $boxShadowSmall;
+    @media only screen and (min-width: $tablet) {
+        width: 500px;
+        text-align: center;
+    }
 }

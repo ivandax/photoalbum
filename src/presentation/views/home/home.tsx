@@ -44,7 +44,7 @@ const Home = (): JSX.Element => {
             return sessionData.data.role === 'member' ? (
                 <div
                     className={`home ${
-                        openCreatePost || commentSection.isOpen ? 'blocked' : ''
+                        openCreatePost ? 'blocked' : ''
                     }`}
                 >
                     <Timeline />

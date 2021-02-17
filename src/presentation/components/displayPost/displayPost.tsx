@@ -68,7 +68,7 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         <span>Publicado por {post.postedByName}</span>
                     </figure>
                     <div
-                        className={`comments ${
+                        className={`commentsCountArea ${
                             post.comments.length > 0 ? 'withLength' : ''
                         }`}
                     >

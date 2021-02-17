@@ -52,12 +52,16 @@
                 }
             }
         }
-        .comments {
+        .commentsCountArea {
             @include flex-complete(
                 $direction: row,
                 $justify: flex-end,
-                $align: flex-start
+                $align: center
             );
+
+            div{
+                margin-left: 4px;
+            }
 
             button{
                 margin: 4px;
@@ -69,7 +73,7 @@
             @include flex-complete(
                 $direction: row,
                 $justify: space-between,
-                $align: flex-start
+                $align: center
             );
         }
     }

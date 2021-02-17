@@ -42,6 +42,7 @@
 .blocked {
     overflow: hidden;
     position: fixed;
+    z-index: 101; //to go on top of header when on desktop.
 }
 
 .securityNotice {

@@ -31,9 +31,10 @@
                 border: none;
                 background-color: white;
             }
-        }
-        @media only screen and (min-width: $tablet) {
-            width: 320px;
+            @media only screen and (min-width: $tablet) {
+                width: 600px;
+                margin: auto;
+            }
         }
 
         .commentInput {
@@ -55,9 +56,17 @@
             }
         }
 
-        .commentArea{
+        .commentArea {
             width: 100%;
-            @include flex-complete($direction: column, $justify: flex-start, $align: center);
+            @include flex-complete(
+                $direction: column,
+                $justify: flex-start,
+                $align: center
+            );
+            @media only screen and (min-width: $tablet) {
+                width: 600px;
+                margin: auto;
+            }
         }
     }
 }
@@ -66,14 +75,14 @@
     visibility: visible;
     opacity: 1;
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    z-index: 1500;
+    z-index: 899;
 }
 
 .commentSectionHide {
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    z-index: -1500;
+    z-index: -899;
 }
 
 .comment {
@@ -84,10 +93,14 @@
     border-radius: 4px;
     box-shadow: $boxShadowSmall;
 
-    .commentContent{
-        @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
-        
-        .by{
+    .commentContent {
+        @include flex-complete(
+            $direction: column,
+            $justify: flex-start,
+            $align: flex-start
+        );
+
+        .by {
             font-size: small;
             font-weight: bold;
         }
