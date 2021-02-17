@@ -4,27 +4,49 @@ import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
 
 import { UserWithId } from '../../../persistence/users';
-import { Post, Comment, addComment } from '../../../persistence/posts';
+import { Post, Comment, addComment, deleteComment } from '../../../persistence/posts';
 
 import './commentSection.scss';
 
 interface CommentComponentProps {
-    key: string;
     comment: Comment;
+    sessionData: UserWithId;
+    postId: string;
 }
 
 const CommentComponent = (props: CommentComponentProps): JSX.Element => {
-    const { key, comment } = props;
+    const { comment, sessionData, postId } = props;
+
+    const [displayDelete, setDisplayDelete] = useState(false);
+
+    const handleDeleteMe = async () => {
+        await deleteComment(comment.commentId, postId);
+    };
+
     return (
-        <div key={key} className="comment">
+        <div className="comment">
             <div className="commentContent">
-                <div className="by">{`${new Date(
+                <div className="by">{`En ${new Date(
                     comment.createdOn
-                ).toLocaleDateString()} ${comment.postedByName}:`}</div>
+                ).toLocaleDateString("es-ES")} ${
+                    sessionData.id === comment.postedById
+                        ? 'tu comentaste'
+                        : `${comment.postedByName} comentó`
+                }:`}</div>
                 <div className="text">{comment.text}</div>
             </div>
-            <div>
-                <MoreVertIcon />
+            <div
+                className={`actions ${
+                    sessionData.id === comment.postedById ? 'show' : ''
+                }`}
+            >
+                <button className={displayDelete ? 'show' : ''} onClick={handleDeleteMe}>
+                    Borrar
+                </button>
+                <MoreVertIcon
+                    className="moreIcon"
+                    onClick={() => setDisplayDelete(!displayDelete)}
+                />
             </div>
         </div>
     );
@@ -47,7 +69,8 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
         onClose();
     };
 
-    const handleSaveComment = () => {
+    const handleSaveComment = (event: React.FormEvent) => {
+        event.preventDefault();
         pipe(
             O.fromNullable(post),
             O.fold(
@@ -61,7 +84,9 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
                             () => {},
                             async (commentText) => {
                                 setMyComment(O.none);
+                                const now = +new Date();
                                 const comment: Comment = {
+                                    commentId: `${sessionData.id}${now}`,
                                     postedById: sessionData.id,
                                     postedByName:
                                         sessionData.name !== ''
@@ -69,7 +94,7 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
                                             : sessionData.email === null
                                             ? sessionData.id
                                             : sessionData.email,
-                                    createdOn: +new Date(),
+                                    createdOn: now,
                                     text: commentText,
                                     textColor: 'black',
                                 };
@@ -105,13 +130,15 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
                                     <CommentComponent
                                         key={`${comment.createdOn}${comment.postedById}`}
                                         comment={comment}
+                                        sessionData={sessionData}
+                                        postId={validPost.postId}
                                     />
                                 ))}
                             </div>
                         )
                     )
                 )}
-                <div className="commentInput">
+                <form className="commentInput" onSubmit={handleSaveComment}>
                     <textarea
                         placeholder="Comentar..."
                         value={pipe(
@@ -124,10 +151,10 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
                                 : setMyComment(O.some(event.target.value));
                         }}
                     ></textarea>
-                    <button disabled={O.isNone(myComment)} onClick={handleSaveComment}>
+                    <button disabled={O.isNone(myComment)} type="submit">
                         Guardar
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     );

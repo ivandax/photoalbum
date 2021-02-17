@@ -105,4 +105,28 @@
             font-weight: bold;
         }
     }
+
+    .actions {
+        display: none;
+        &.show {
+            @include flex-complete($direction: row, $justify: center, $align: center);
+        }
+
+        button {
+            background-color: rgb(197, 20, 20);
+            color: white;
+            padding: 4px;
+            border: none;
+            border-radius: 4px;
+            display: none;
+
+            &.show {
+                display: block;
+            }
+        }
+
+        .moreIcon {
+            cursor: pointer;
+        }
+    }
 }

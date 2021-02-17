@@ -5,6 +5,7 @@ import 'firebase/storage';
 //Interfaces
 
 export interface Comment {
+    commentId: string;
     postedById: string;
     postedByName: string;
     createdOn: number;
@@ -190,4 +191,33 @@ const addComment = async (comment: Comment, id: string): Promise<void> => {
     }
 };
 
-export { addPost, uploadFile, getPostImage, getPosts, getRealTimePosts, addComment };
+const deleteComment = async (commentId: string, postId: string): Promise<void> => {
+    try {
+        console.log('Deleting comment');
+        const db = getDbInstance();
+        const docData = await db.collection('posts').doc(postId).get();
+        const parsed = parsePost(docData);
+        if (parsed !== undefined) {
+            const comments = parsed.comments;
+            const newComments = [...comments].filter(
+                (comment) => comment.commentId !== commentId
+            );
+            await db
+                .collection('posts')
+                .doc(postId)
+                .set({ comments: newComments, updatedOn: +new Date() }, { merge: true });
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export {
+    addPost,
+    uploadFile,
+    getPostImage,
+    getPosts,
+    getRealTimePosts,
+    addComment,
+    deleteComment,
+};
