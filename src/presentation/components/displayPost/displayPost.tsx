@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Comment as CommentIcon } from '@material-ui/icons';
 
 //persistence
 import { Post, getPostImage } from '../../../persistence/posts';
 
 //actions
-import { setCommentSectionOpen } from '../../../redux/commentSectionReducer';
+import {
+    setCommentSectionOpen,
+    setCommentSectionUpdate,
+} from '../../../redux/commentSectionReducer';
+import { State } from '../../../redux/index';
 
 import './displayPost.scss';
 
@@ -19,6 +23,7 @@ interface DisplayPostProps {
 
 const DisplayPost = (props: DisplayPostProps): JSX.Element => {
     const dispatch = useDispatch();
+    const commentSection = useSelector((state: State) => state.commentSection);
     const { post } = props;
 
     const [photoSrc, setPhotoSrc] = useState<GetPhotoOp>({ status: 'pending' });
@@ -37,6 +42,12 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
             onGetPhoto();
         }
     }, [photoSrc.status]);
+
+    useEffect(() => {
+        if (commentSection.isOpen) {
+            dispatch(setCommentSectionUpdate(post));
+        }
+    }, [post.comments.length]);
 
     return (
         <div className="displayPost">

@@ -4,9 +4,9 @@ import 'firebase/storage';
 
 //Interfaces
 
-interface Comment {
-    id: string;
-    name: string;
+export interface Comment {
+    postedById: string;
+    postedByName: string;
     createdOn: number;
     text: string;
     textColor: string;
@@ -168,50 +168,26 @@ function getRealTimePosts(
         });
 }
 
-// const updateUser = async (
-//     item: PartialUserWithId,
-//     id: string
-// ): Promise<void | string> => {
-//     console.log('Editing user');
-//     const db = getDbInstance();
-//     try {
-//         await db.collection('users').doc(id).set(item, { merge: true });
-//     } catch (e) {
-//         console.log(e);
-//         return `Error - ${e.message}`;
-//     }
-// };
+const addComment = async (comment: Comment, id: string): Promise<void> => {
+    try {
+        console.log('Adding comment');
+        const db = getDbInstance();
+        const docData = await db.collection('posts').doc(id).get();
+        const parsed = parsePost(docData);
+        if (parsed !== undefined) {
+            const comments = parsed.comments;
+            const newComments = [...comments, comment];
+            await db
+                .collection('posts')
+                .doc(id)
+                .set(
+                    { comments: newComments, updatedOn: comment.createdOn },
+                    { merge: true }
+                );
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
 
-// async function getUser(id: string): Promise<UserWithId | null | undefined> {
-//     const db = getDbInstance();
-//     console.log(`Getting user ${id} from users`);
-//     const document = await db.collection('users').doc(id).get();
-//     if (document.exists) {
-//         return parseDoc(document);
-//     }
-//     return null;
-// }
-
-// async function getUsers(): Promise<UserWithId[] | string> {
-//     const db = getDbInstance();
-//     const results: UserWithId[] = [];
-//     try {
-//         await db
-//             .collection('users')
-//             .orderBy('createdOn')
-//             .get()
-//             .then(function (querySnapshot) {
-//                 querySnapshot.forEach((doc) => {
-//                     const data = parseDoc(doc);
-//                     if (data) {
-//                         results.push(data);
-//                     }
-//                 });
-//             });
-//         return results;
-//     } catch (e) {
-//         return `Error - ${e.message}`;
-//     }
-// }
-
-export { addPost, uploadFile, getPostImage, getPosts, getRealTimePosts };
+export { addPost, uploadFile, getPostImage, getPosts, getRealTimePosts, addComment };
