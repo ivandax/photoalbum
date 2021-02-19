@@ -43,7 +43,7 @@ const Admin = (): JSX.Element => {
     const { users } = useSelector((state: State) => state.adminPanel);
 
     const [roleChanges, setRoleChanges] = useState<RoleChange[]>([]);
-    const [localUpdateProcess, setLocalUpdateProcess] = useState("resolved");
+    const [localUpdateProcess, setLocalUpdateProcess] = useState('resolved');
 
     useEffect(() => {
         if (sessionData.status === 'failed') {
@@ -65,7 +65,7 @@ const Admin = (): JSX.Element => {
     }, [users.status]);
 
     const handleSaveChanges = async (event: React.FormEvent) => {
-        setLocalUpdateProcess("loading");
+        setLocalUpdateProcess('loading');
         event.preventDefault();
         if (roleChanges.length > 0) {
             await Promise.all(
@@ -73,11 +73,15 @@ const Admin = (): JSX.Element => {
                     async (change) => await updateUser({ role: change.role }, change.id)
                 )
             );
-            setLocalUpdateProcess("resolved");
+            setLocalUpdateProcess('resolved');
         }
     };
 
-    if (users.status === 'pending' || users.status === 'ongoing' || localUpdateProcess === "loading") {
+    if (
+        users.status === 'pending' ||
+        users.status === 'ongoing' ||
+        localUpdateProcess === 'loading'
+    ) {
         return <Loader />;
     }
 

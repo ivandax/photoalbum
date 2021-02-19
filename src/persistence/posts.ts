@@ -147,7 +147,6 @@ async function getPosts(): Promise<Post[] | string> {
 }
 
 function getRealTimePosts(setPostsState: (data: Post[]) => void): void {
-    console.log('this happens');
     const db = getDbInstance();
     db.collection('posts')
         .orderBy('createdOn', 'desc')
