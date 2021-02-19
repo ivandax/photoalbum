@@ -59,7 +59,6 @@ const Settings = (): JSX.Element => {
                         <StyledButton
                             value="Cerrar Sesión"
                             callback={handleLogout}
-                            className="red"
                         />
                     </div>
                 </div>

@@ -11,6 +11,7 @@ export interface UserWithId {
     isAdmin: boolean;
     emailVerified: boolean;
     id: string;
+    color: string;
 }
 
 export type PartialUserWithId = Partial<UserWithId>;

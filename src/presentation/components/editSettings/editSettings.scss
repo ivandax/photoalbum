@@ -1,35 +1,76 @@
 @import '../../../style/mixins.scss';
 @import '../../../style/variables.scss';
 
-.editSettings{
+.editSettings {
     @include flex-complete($direction: column, $justify: flex-start, $align: flex-start);
     padding-top: 32px;
-    input{
-        padding: 8px;
-        border-radius: 4px;
-    }
 
-    h3{
+    h3 {
         padding-bottom: 8px;
     }
-    h5{
+    h5 {
         padding-bottom: 4px;
     }
 
-    button{
-        margin-left: 8px;
-        padding: 8px;
-        border: none;
-        border-radius: 4px;
+    .properties {
+        div {
+            margin-top: 16px;
+        }
+        input {
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 8px;
+
+            option {
+                font-weight: bold;
+                &.black {
+                    color: $black;
+                }
+                &.red {
+                    color: $red;
+                }
+                &.blue {
+                    color: $blue;
+                }
+                &.orange {
+                    color: $orange;
+                }
+                &.yellow {
+                    color: $yellow;
+                }
+                &.lightblue {
+                    color: $lightblue;
+                }
+                &.green {
+                    color: $green;
+                }
+                &.purple {
+                    color: $purple;
+                }
+                &.pink {
+                    color: $pink;
+                }
+            }
+        }
     }
 
-    span.message{
+    span.message {
         color: $primary;
         padding: 4px;
     }
 
-    p{
+    p {
         padding-top: 8px;
     }
-
 }

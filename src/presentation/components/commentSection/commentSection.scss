@@ -103,6 +103,33 @@
         .by {
             font-size: small;
             font-weight: bold;
+            &.black {
+                color: $black;
+            }
+            &.red {
+                color: $red;
+            }
+            &.blue {
+                color: $blue;
+            }
+            &.orange {
+                color: $orange;
+            }
+            &.yellow {
+                color: $yellow;
+            }
+            &.lightblue {
+                color: $lightblue;
+            }
+            &.green {
+                color: $green;
+            }
+            &.purple {
+                color: $purple;
+            }
+            &.pink {
+                color: $pink;
+            }
         }
 
         &.hide {

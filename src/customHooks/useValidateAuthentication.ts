@@ -31,6 +31,7 @@ function useValidateAuthentication(): AsyncOp<UserWithId, string> {
                         isAdmin: false,
                         id: user.uid,
                         emailVerified: user.emailVerified,
+                        color: "black",
                     };
                     await addUser(newProfile, user.uid);
                     dispatch(setValidSessionData(newProfile));
