@@ -146,26 +146,21 @@ async function getPosts(): Promise<Post[] | string> {
     }
 }
 
-function getRealTimePosts(
-    setPostsState: React.Dispatch<React.SetStateAction<AsyncOp<Post[], string>>>
-): void {
+function getRealTimePosts(setPostsState: (data: Post[]) => void): void {
+    console.log('this happens');
     const db = getDbInstance();
     db.collection('posts')
         .orderBy('createdOn', 'desc')
         .onSnapshot((querySnapshop) => {
-            try {
-                const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {
-                    const parsed = parsePost(docSnap);
-                    if (parsed) {
-                        return [...soFar, parsed];
-                    } else {
-                        return soFar;
-                    }
-                }, []);
-                setPostsState({ status: 'successful', data: posts });
-            } catch (e) {
-                setPostsState({ status: 'failed', error: `Error obteniendo posts` });
-            }
+            const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {
+                const parsed = parsePost(docSnap);
+                if (parsed) {
+                    return [...soFar, parsed];
+                } else {
+                    return soFar;
+                }
+            }, []);
+            setPostsState(posts);
         });
 }
 
