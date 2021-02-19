@@ -26,7 +26,7 @@ const CommentComponent = (props: CommentComponentProps): JSX.Element => {
     return (
         <div className="comment">
             <div className={`commentContent ${displayDelete ? 'hide' : ''}`}>
-                <div className={`by ${sessionData.color}`}>{`En ${new Date(
+                <div className={`by ${comment.textColor}`}>{`En ${new Date(
                     comment.createdOn
                 ).toLocaleDateString('es-ES')} ${
                     sessionData.id === comment.postedById
@@ -96,7 +96,7 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
                                             : sessionData.email,
                                     createdOn: now,
                                     text: commentText,
-                                    textColor: 'black',
+                                    textColor: sessionData.color,
                                 };
                                 await addComment(comment, validPost.postId);
                             }
