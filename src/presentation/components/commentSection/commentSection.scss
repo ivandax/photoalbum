@@ -104,6 +104,10 @@
             font-size: small;
             font-weight: bold;
         }
+
+        &.hide {
+            visibility: hidden;
+        }
     }
 
     .actions {
@@ -115,10 +119,11 @@
         button {
             background-color: rgb(197, 20, 20);
             color: white;
-            padding: 4px;
+            padding: 8px;
             border: none;
             border-radius: 4px;
             display: none;
+            margin-right: 12px;
 
             &.show {
                 display: block;

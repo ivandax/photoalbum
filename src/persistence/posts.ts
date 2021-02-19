@@ -151,7 +151,7 @@ function getRealTimePosts(
 ): void {
     const db = getDbInstance();
     db.collection('posts')
-        .orderBy('updatedOn', 'desc')
+        .orderBy('createdOn', 'desc')
         .onSnapshot((querySnapshop) => {
             try {
                 const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {

@@ -53,20 +53,15 @@
             }
         }
         .commentsCountArea {
-            @include flex-complete(
-                $direction: row,
-                $justify: flex-end,
-                $align: center
-            );
+            @include flex-complete($direction: row, $justify: flex-end, $align: center);
 
-            div{
+            div {
+                @include flex-complete($direction: row, $justify: center, $align: center);
                 margin-left: 4px;
             }
-
-            button{
+            .commentIcon {
+                cursor: pointer;
                 margin: 4px;
-                border: none;
-                border-radius: 4px;
             }
         }
         .withLength {

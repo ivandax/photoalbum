@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Comment as CommentIcon } from '@material-ui/icons';
+import {
+    Comment as CommentIcon,
+    EmojiPeople as EmojiPeopleIcon,
+} from '@material-ui/icons';
 
 //persistence
 import { Post, getPostImage } from '../../../persistence/posts';
@@ -73,11 +76,15 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         }`}
                     >
                         {post.comments.length > 0 ? (
-                            <div>{`Comentarios: ${post.comments.length}`}</div>
+                            <div>
+                                <EmojiPeopleIcon />
+                                <span>{post.comments.length}</span>
+                            </div>
                         ) : null}
-                        <button onClick={() => dispatch(setCommentSectionOpen(post))}>
-                            <CommentIcon />
-                        </button>
+                        <CommentIcon
+                            onClick={() => dispatch(setCommentSectionOpen(post))}
+                            className="commentIcon"
+                        />
                     </div>
                 </div>
             ) : null}

@@ -25,10 +25,10 @@ const CommentComponent = (props: CommentComponentProps): JSX.Element => {
 
     return (
         <div className="comment">
-            <div className="commentContent">
-                <div className="by">{`En ${new Date(
-                    comment.createdOn
-                ).toLocaleDateString("es-ES")} ${
+            <div className={`commentContent ${displayDelete ? 'hide' : ''}`}>
+                <div className="by">{`En ${new Date(comment.createdOn).toLocaleDateString(
+                    'es-ES'
+                )} ${
                     sessionData.id === comment.postedById
                         ? 'tu comentaste'
                         : `${comment.postedByName} comentó`
