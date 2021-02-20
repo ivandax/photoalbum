@@ -28,33 +28,6 @@ export interface Post {
     //storageBucket: string;
 }
 
-interface UploadSuccess {
-    status: 'successful';
-    downloadUrl: string;
-    bucket: string;
-}
-
-interface UploadFailure {
-    status: 'failed';
-    error: string;
-}
-interface PostSuccess {
-    status: 'successful';
-}
-
-interface PostFailure {
-    status: 'failed';
-    error: string;
-}
-interface ImageUrlSuccess {
-    status: 'successful';
-    url: string;
-}
-interface ImageUrlFailure {
-    status: 'failed';
-    error: string;
-}
-
 //Functions
 
 function parsePost(
@@ -64,6 +37,15 @@ function parsePost(
     if (castedDoc) {
         return castedDoc;
     }
+}
+interface UploadSuccess {
+    status: 'successful';
+    downloadUrl: string;
+    bucket: string;
+}
+interface UploadFailure {
+    status: 'failed';
+    error: string;
 }
 
 const uploadFile = (
@@ -101,6 +83,15 @@ function getDbInstance() {
     return db;
 }
 
+interface PostSuccess {
+    status: 'successful';
+}
+
+interface PostFailure {
+    status: 'failed';
+    error: string;
+}
+
 const addPost = async (item: Post, id: string): Promise<PostSuccess | PostFailure> => {
     try {
         console.log('Adding post');
@@ -111,6 +102,15 @@ const addPost = async (item: Post, id: string): Promise<PostSuccess | PostFailur
         return { status: 'failed', error: `Error en post: ${e.message}` };
     }
 };
+
+interface ImageUrlSuccess {
+    status: 'successful';
+    url: string;
+}
+interface ImageUrlFailure {
+    status: 'failed';
+    error: string;
+}
 
 const getPostImage = async (
     fileName: string
@@ -123,6 +123,11 @@ const getPostImage = async (
         return { status: 'failed', error: `Error al obtener imagen: ${e.message}` };
     }
 };
+
+async function deleteImage(fileName: string): Promise<void> {
+    const ref = firebase.storage().ref().child(`posts/${fileName}`);
+    await ref.delete();
+}
 
 async function getPosts(): Promise<Post[] | string> {
     const db = getDbInstance();
@@ -147,6 +152,7 @@ async function getPosts(): Promise<Post[] | string> {
 }
 
 function getRealTimePosts(setPostsState: (data: Post[]) => void): void {
+    console.log('getting realtime posts');
     const db = getDbInstance();
     db.collection('posts')
         .orderBy('createdOn', 'desc')
@@ -162,6 +168,17 @@ function getRealTimePosts(setPostsState: (data: Post[]) => void): void {
             setPostsState(posts);
         });
 }
+
+const deletePost = async (id: string, fileName: string): Promise<void | string> => {
+    try {
+        console.log('Deleting post');
+        const db = getDbInstance();
+        await db.collection('posts').doc(id).delete();
+        await deleteImage(fileName);
+    } catch (e) {
+        return 'No hemos podido borrar el post';
+    }
+};
 
 const addComment = async (comment: Comment, id: string): Promise<void> => {
     try {
@@ -214,4 +231,5 @@ export {
     getRealTimePosts,
     addComment,
     deleteComment,
+    deletePost,
 };

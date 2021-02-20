@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 //persistence
 import { Post, getRealTimePosts } from '../../../persistence/posts';
+import { UserWithId } from '../../../persistence/users';
 
 import DisplayPost from '../displayPost';
 
@@ -12,9 +13,14 @@ import { State } from '../../../redux/index';
 
 import './timeline.scss';
 
-const Timeline = (): JSX.Element => {
+interface TimelineProps {
+    sessionData: UserWithId;
+}
+
+const Timeline = (props: TimelineProps): JSX.Element => {
     const dispatch = useDispatch();
     const { posts } = useSelector((state: State) => state.homeView);
+    const { sessionData } = props;
 
     const setPostsCallback = (data: Post[]) => {
         dispatch(setSuccessfulPosts(data));
@@ -29,7 +35,13 @@ const Timeline = (): JSX.Element => {
     return (
         <div className="timeline">
             {posts.status === 'successful' && posts.data.length > 0 ? (
-                posts.data.map((post) => <DisplayPost key={post.postId} post={post} />)
+                posts.data.map((post) => (
+                    <DisplayPost
+                        key={post.postId}
+                        post={post}
+                        sessionData={sessionData}
+                    />
+                ))
             ) : (
                 <div className="notice">No hemos obtenido ningun post</div>
             )}

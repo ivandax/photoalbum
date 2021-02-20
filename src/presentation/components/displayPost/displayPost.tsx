@@ -3,10 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     Comment as CommentIcon,
     EmojiPeople as EmojiPeopleIcon,
+    KeyboardArrowDown as ArrowDownIcon,
+    KeyboardArrowUp as ArrowUpIcon,
 } from '@material-ui/icons';
 
 //persistence
-import { Post, getPostImage } from '../../../persistence/posts';
+import { Post, getPostImage, deletePost } from '../../../persistence/posts';
+import { UserWithId } from '../../../persistence/users';
 
 //actions
 import {
@@ -22,14 +25,20 @@ type GetPhotoOp = AsyncOp<string, string>;
 interface DisplayPostProps {
     key: string;
     post: Post;
+    sessionData: UserWithId;
 }
 
 const DisplayPost = (props: DisplayPostProps): JSX.Element => {
     const dispatch = useDispatch();
     const commentSection = useSelector((state: State) => state.commentSection);
-    const { post } = props;
+    const { post, sessionData } = props;
 
     const [photoSrc, setPhotoSrc] = useState<GetPhotoOp>({ status: 'pending' });
+    const [displayPostActions, setDisplayPostActions] = useState(false);
+
+    const handleDeletePost = () => {
+        deletePost(post.postId, post.fileName);
+    };
 
     useEffect(() => {
         const onGetPhoto = async () => {
@@ -70,21 +79,40 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         <figcaption>{post.title}</figcaption>
                         <span>Publicado por {post.postedByName}</span>
                     </figure>
-                    <div
-                        className={`commentsCountArea ${
-                            post.comments.length > 0 ? 'withLength' : ''
-                        }`}
-                    >
-                        {post.comments.length > 0 ? (
-                            <div>
-                                <EmojiPeopleIcon />
-                                <span>{post.comments.length}</span>
-                            </div>
+                    <div className={'commentsCountArea'}>
+                        <div>
+                            <EmojiPeopleIcon />
+                            <span>{post.comments.length}</span>
+                        </div>
+                        {(sessionData.isAdmin || post.postedBy === sessionData.id) &&
+                        displayPostActions === false ? (
+                            <ArrowDownIcon
+                                className="arrowIcon"
+                                onClick={() => setDisplayPostActions(!displayPostActions)}
+                            />
+                        ) : null}
+                        {(sessionData.isAdmin || post.postedBy === sessionData.id) &&
+                        displayPostActions === true ? (
+                            <ArrowUpIcon
+                                className="arrowIcon"
+                                onClick={() => setDisplayPostActions(!displayPostActions)}
+                            />
                         ) : null}
                         <CommentIcon
                             onClick={() => dispatch(setCommentSectionOpen(post))}
                             className="commentIcon"
                         />
+                    </div>
+                    <div className={`postActions ${displayPostActions ? 'show' : ''}`}>
+                        <button onClick={handleDeletePost} className="deletePostButton">
+                            Borrar
+                        </button>
+                        <button
+                            onClick={() => setDisplayPostActions(false)}
+                            className="backPostButton"
+                        >
+                            Cerrar
+                        </button>
                     </div>
                 </div>
             ) : null}

@@ -42,12 +42,8 @@ const Home = (): JSX.Element => {
             return <Loader />;
         case 'successful':
             return sessionData.data.role === 'member' ? (
-                <div
-                    className={`home ${
-                        openCreatePost ? 'blocked' : ''
-                    }`}
-                >
-                    <Timeline />
+                <div className={`home ${openCreatePost ? 'blocked' : ''}`}>
+                    <Timeline sessionData={sessionData.data} />
                     <CommentSection
                         isOpen={commentSection.isOpen}
                         onClose={() => dispatch(setCommentSectionClose())}
