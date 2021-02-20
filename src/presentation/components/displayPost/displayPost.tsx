@@ -18,6 +18,9 @@ import {
 } from '../../../redux/commentSectionReducer';
 import { State } from '../../../redux/index';
 
+//components
+import ConfirmationModal from '../confirmationModal';
+
 import './displayPost.scss';
 
 type GetPhotoOp = AsyncOp<string, string>;
@@ -35,9 +38,10 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
 
     const [photoSrc, setPhotoSrc] = useState<GetPhotoOp>({ status: 'pending' });
     const [displayPostActions, setDisplayPostActions] = useState(false);
+    const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
 
     const handleDeletePost = () => {
-        deletePost(post.postId, post.fileName);
+        setIsOpenConfirmationModal(true);
     };
 
     useEffect(() => {
@@ -114,6 +118,15 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                             Cerrar
                         </button>
                     </div>
+                    <ConfirmationModal
+                        isOpen={isOpenConfirmationModal}
+                        onClose={() => setIsOpenConfirmationModal(false)}
+                        message="Atención! Se borrará esta publicación, la foto asociada y todos los comentarios. Seguro que quieres borrar?"
+                        actionConfirmation="Sí, borrar"
+                        confirmationCallback={() =>
+                            deletePost(post.postId, post.fileName)
+                        }
+                    />
                 </div>
             ) : null}
             {photoSrc.status === 'failed' ? <div>{photoSrc.error}</div> : null}
