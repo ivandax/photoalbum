@@ -69,13 +69,25 @@
         }
         .postProps {
             margin: 24px;
-            @include flex-complete($direction: row, $justify: center, $align: center);
+            @include flex-complete(
+                $direction: column,
+                $justify: flex-start,
+                $align: flex-start
+            );
 
             .photoTitle {
                 padding: 4px;
                 width: 220px;
                 @media only screen and (min-width: $tablet) {
                     width: 270px;
+                }
+            }
+
+            .photoCategories {
+                margin-top: 16px;
+                width: 220px;
+                @media only screen and (min-width: $tablet) {
+                    max-width: 270px;
                 }
             }
         }

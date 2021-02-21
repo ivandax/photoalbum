@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
 import { flow } from 'fp-ts/lib/function';
+import { Select, Checkbox, ListItemText, MenuItem, Input } from '@material-ui/core';
 
 import { UserWithId } from '../../../persistence/users';
 import { uploadFile, addPost } from '../../../persistence/posts';
@@ -33,6 +34,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     const [onePhotoTitle, setOnePhotoTitle] = useState('');
     const [fileUploadPercent, setFileUploadPercent] = useState(0);
     const [localUpdateProcess, setLocalUpdateProcess] = useState('resolved');
+    const [categories, setCategories] = React.useState<string[]>([]);
 
     const handleCleanUpAndClose = (): void => {
         setOnePhotoMessage(O.none);
@@ -40,7 +42,29 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
         setOnePhotoTitle('');
         setFileUploadPercent(0);
         setLocalUpdateProcess('resolved');
+        setCategories([]);
         onClose();
+    };
+
+    const options = [
+        'navidad',
+        'tbt',
+        'vacaciones',
+        'cumpleaños',
+        'boiyi boiyi',
+        '90s',
+        '2000s',
+        '2010s',
+        'ma',
+        'lali',
+        'ivan',
+        'veronica',
+        'emilia',
+        'juan',
+    ];
+
+    const handleChangeCategories = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setCategories(event.target.value as string[]);
     };
 
     const handleLoadPhoto = (): void => {
@@ -118,7 +142,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                         updatedOn: now,
                         comments: [],
                         fileName: photoRef.handle.name,
-                        categories: [],
+                        categories: categories,
                         //picPreview: photoRef.base64,
                         //fileUrl: uploadedPhoto.downloadUrl,
                         //storageBucket: uploadedPhoto.bucket,
@@ -204,6 +228,28 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                             className="photoTitle"
                                             maxLength={120}
                                         />
+                                        <Select
+                                            multiple
+                                            className="photoCategories"
+                                            value={categories}
+                                            onChange={handleChangeCategories}
+                                            input={<Input />}
+                                            renderValue={(selected) =>
+                                                (selected as string[]).join(', ')
+                                            }
+                                        >
+                                            {options.map((category, index) => (
+                                                <MenuItem key={index} value={category}>
+                                                    <Checkbox
+                                                        checked={
+                                                            categories.indexOf(category) >
+                                                            -1
+                                                        }
+                                                    />
+                                                    <ListItemText primary={category} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
                                     </div>
                                 </>
                             )
