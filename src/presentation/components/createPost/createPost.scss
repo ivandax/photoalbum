@@ -37,28 +37,6 @@
             }
         }
 
-        .options {
-            @include flex-complete($direction: row, $justify: center, $align: center);
-            button {
-                width: 50%;
-                padding: 8px 0 8px 0;
-                background-color: $primary;
-                color: white;
-                border: none;
-                font-weight: bold;
-            }
-            .left {
-                border-radius: 8px 0 0 0;
-            }
-            .right {
-                border-radius: 0 8px 0 0;
-            }
-            .active {
-                background-color: white;
-                color: black;
-            }
-        }
-
         .upload {
             padding: 12px;
             margin-top: 12px;
@@ -118,10 +96,6 @@
                 background-color: $darkblue;
                 color: white;
             }
-        }
-
-        .manyPhotos {
-            padding: 8px;
         }
     }
 }

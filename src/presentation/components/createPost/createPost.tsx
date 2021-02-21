@@ -26,7 +26,6 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     const { sessionData, isOpen, onClose } = props;
     const photoRef = useRef<HTMLInputElement>(null);
 
-    const [tab, setTab] = useState('onePhoto');
     const [onePhotoMessage, setOnePhotoMessage] = useState<O.Option<string>>(O.none);
     const [onePhotoPreview, setOnePhotoPreview] = useState<O.Option<PhotoReference>>(
         O.none
@@ -153,94 +152,74 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                         <div>Finalizando post...</div>
                     </div>
                 ) : null}
-                <div className="options">
-                    <button
-                        className={`left ${tab === 'onePhoto' ? 'active' : ''}`}
-                        onClick={() => setTab('onePhoto')}
-                    >
-                        Una foto
-                    </button>
-                    <button
-                        className={`right ${tab === 'manyPhotos' ? 'active' : ''}`}
-                        onClick={() => setTab('manyPhotos')}
-                    >
-                        Muchas fotos
-                    </button>
-                </div>
-                {tab === 'onePhoto' ? (
-                    <div className="onePhoto">
-                        <div className="upload">
-                            <input
-                                type="file"
-                                id="files"
-                                className="hidden"
-                                accept="image/*"
-                                ref={photoRef}
-                                onChange={handleLoadPhoto}
-                                onClick={(event) => {//resets file on input
-                                    event.currentTarget.value = "";
-                                }}
-                            />
-                            <label htmlFor="files">Subir foto</label>
-                        </div>
-                        <div className="picPreview">
-                            <img
-                                src={pipe(
-                                    onePhotoPreview,
-                                    O.map((photoRef) => photoRef.base64),
-                                    O.getOrElse(() => placeholder)
-                                )}
-                                alt="image preview for post"
-                            />
-                        </div>
-                        {pipe(
-                            onePhotoMessage,
-                            O.fold(
-                                () => null,
-                                (message) => (
-                                    <div>
-                                        <p>{message}</p>
-                                    </div>
-                                )
-                            )
-                        )}
-                        {pipe(
-                            onePhotoPreview,
-                            O.fold(
-                                () => null,
-                                () => (
-                                    <>
-                                        <div className="postProps">
-                                            <FormInput
-                                                placeholder="Titulo (Opcional)"
-                                                value={onePhotoTitle}
-                                                type="text"
-                                                onChange={(value) =>
-                                                    setOnePhotoTitle(value)
-                                                }
-                                                className="photoTitle"
-                                                maxLength={120}
-                                            />
-                                        </div>
-                                    </>
-                                )
-                            )
-                        )}
-                        <div className="post">
-                            <button
-                                disabled={O.isNone(onePhotoPreview)}
-                                onClick={handlePost}
-                                className={O.isSome(onePhotoPreview) ? 'readyToPost' : ''}
-                            >
-                                Publicar
-                            </button>
-                            <button onClick={handleCleanUpAndClose}>Cerrar</button>
-                        </div>
+                <div className="onePhoto">
+                    <div className="upload">
+                        <input
+                            type="file"
+                            id="files"
+                            className="hidden"
+                            accept="image/*"
+                            ref={photoRef}
+                            onChange={handleLoadPhoto}
+                            onClick={(event) => {
+                                //resets file on input
+                                event.currentTarget.value = '';
+                            }}
+                        />
+                        <label htmlFor="files">Subir foto</label>
                     </div>
-                ) : null}
-                {tab === 'manyPhotos' ? (
-                    <div className="manyPhotos">Esta sección esta en construcción</div>
-                ) : null}
+                    <div className="picPreview">
+                        <img
+                            src={pipe(
+                                onePhotoPreview,
+                                O.map((photoRef) => photoRef.base64),
+                                O.getOrElse(() => placeholder)
+                            )}
+                            alt="image preview for post"
+                        />
+                    </div>
+                    {pipe(
+                        onePhotoMessage,
+                        O.fold(
+                            () => null,
+                            (message) => (
+                                <div>
+                                    <p>{message}</p>
+                                </div>
+                            )
+                        )
+                    )}
+                    {pipe(
+                        onePhotoPreview,
+                        O.fold(
+                            () => null,
+                            () => (
+                                <>
+                                    <div className="postProps">
+                                        <FormInput
+                                            placeholder="Titulo (Opcional)"
+                                            value={onePhotoTitle}
+                                            type="text"
+                                            onChange={(value) => setOnePhotoTitle(value)}
+                                            className="photoTitle"
+                                            maxLength={120}
+                                        />
+                                    </div>
+                                </>
+                            )
+                        )
+                    )}
+                    <div className="post">
+                        <button
+                            disabled={O.isNone(onePhotoPreview)}
+                            onClick={handlePost}
+                            className={O.isSome(onePhotoPreview) ? 'readyToPost' : ''}
+                        >
+                            Publicar
+                        </button>
+                        <button onClick={handleCleanUpAndClose}>Cerrar</button>
+                    </div>
+                </div>
             </div>
         </div>
     );
