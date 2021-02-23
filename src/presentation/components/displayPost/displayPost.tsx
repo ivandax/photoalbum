@@ -107,6 +107,16 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                             className="commentIcon"
                         />
                     </div>
+                    <div className={`categories ${displayPostActions ? 'show' : ''}`}>
+                        <p>
+                            Publicado en:{' '}
+                            {post.categories.map((category) => (
+                                <span className="category" key={category}>
+                                    {category}
+                                </span>
+                            ))}
+                        </p>
+                    </div>
                     <div className={`postActions ${displayPostActions ? 'show' : ''}`}>
                         <button onClick={handleDeletePost} className="deletePostButton">
                             Borrar

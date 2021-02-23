@@ -98,5 +98,22 @@
                 }
             }
         }
+
+        .categories {
+            font-size: 12px;
+            text-align: center;
+            display: none;
+            &.show {
+                display: block;
+            }
+
+            span.category {
+                padding: 4px;
+                background-color: $primary;
+                color: white;
+                margin-right: 4px;
+                border-radius: 4px;
+            }
+        }
     }
 }
