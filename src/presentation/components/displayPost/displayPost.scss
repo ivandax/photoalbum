@@ -103,14 +103,14 @@
             font-size: 12px;
             text-align: center;
             display: none;
+            padding: 8px;
             &.show {
                 display: block;
             }
 
             span.category {
-                padding: 4px;
-                background-color: $primary;
-                color: white;
+                padding: 2px;
+                background-color: lightgray;
                 margin-right: 4px;
                 border-radius: 4px;
             }

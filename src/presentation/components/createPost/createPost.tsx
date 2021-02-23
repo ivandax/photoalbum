@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
 import { flow } from 'fp-ts/lib/function';
@@ -6,6 +7,8 @@ import { Select, Checkbox, ListItemText, MenuItem, Input } from '@material-ui/co
 
 import { UserWithId } from '../../../persistence/users';
 import { uploadFile, addPost } from '../../../persistence/posts';
+
+import { State } from '../../../redux/index';
 
 import FormInput from '../formInput';
 
@@ -25,6 +28,9 @@ interface PhotoReference {
 
 const CreatePost = (props: CreatePostProps): JSX.Element => {
     const { sessionData, isOpen, onClose } = props;
+    const categoryOptions = useSelector(
+        (state: State) => state.categoriesArray.categoriesArray
+    );
     const photoRef = useRef<HTMLInputElement>(null);
 
     const [onePhotoMessage, setOnePhotoMessage] = useState<O.Option<string>>(O.none);
@@ -45,23 +51,6 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
         setCategories([]);
         onClose();
     };
-
-    const options = [
-        'navidad',
-        'tbt',
-        'vacaciones',
-        'cumpleaños',
-        'boiyi boiyi',
-        '90s',
-        '2000s',
-        '2010s',
-        'ma',
-        'lali',
-        'ivan',
-        'veronica',
-        'emilia',
-        'juan',
-    ];
 
     const handleChangeCategories = (event: React.ChangeEvent<{ value: unknown }>) => {
         setCategories(event.target.value as string[]);
@@ -228,28 +217,38 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                             className="photoTitle"
                                             maxLength={120}
                                         />
-                                        <Select
-                                            multiple
-                                            className="photoCategories"
-                                            value={categories}
-                                            onChange={handleChangeCategories}
-                                            input={<Input />}
-                                            renderValue={(selected) =>
-                                                (selected as string[]).join(', ')
-                                            }
-                                        >
-                                            {options.map((category, index) => (
-                                                <MenuItem key={index} value={category}>
-                                                    <Checkbox
-                                                        checked={
-                                                            categories.indexOf(category) >
-                                                            -1
-                                                        }
-                                                    />
-                                                    <ListItemText primary={category} />
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+                                        {categoryOptions.status === 'successful' ? (
+                                            <Select
+                                                multiple
+                                                className="photoCategories"
+                                                value={categories}
+                                                onChange={handleChangeCategories}
+                                                input={<Input />}
+                                                renderValue={(selected) =>
+                                                    (selected as string[]).join(', ')
+                                                }
+                                            >
+                                                {categoryOptions.data.categories.map(
+                                                    (category: string, index) => (
+                                                        <MenuItem
+                                                            key={index}
+                                                            value={category}
+                                                        >
+                                                            <Checkbox
+                                                                checked={
+                                                                    categories.indexOf(
+                                                                        category
+                                                                    ) > -1
+                                                                }
+                                                            />
+                                                            <ListItemText
+                                                                primary={category}
+                                                            />
+                                                        </MenuItem>
+                                                    )
+                                                )}
+                                            </Select>
+                                        ) : null}
                                     </div>
                                 </>
                             )

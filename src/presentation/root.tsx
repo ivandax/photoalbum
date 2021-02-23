@@ -15,11 +15,11 @@ import Overlay from './components/overlay';
 
 ///hooks
 import useValidateAuthentication from '../customHooks/useValidateAuthentication';
-import useGetAppUsers from '../customHooks/useGetAppUsers';
+import useGetCategoriesArray from '../customHooks/useGetCategoriesArray';
 
 const Root: React.FC = () => {
     const resolvedUser = useValidateAuthentication();
-    useGetAppUsers();
+    useGetCategoriesArray();
     return (
         <div className="root">
             <Router>
