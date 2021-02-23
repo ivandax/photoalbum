@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { Add as AddIcon } from '@material-ui/icons';
+import { AddAPhoto as AddAPhotoIcon } from '@material-ui/icons';
 
 //reducer actions
 import { setCommentSectionClose } from '../../../redux/commentSectionReducer';
@@ -57,7 +57,7 @@ const Home = (): JSX.Element => {
                     />
                     <div className="toolbar">
                         <button onClick={() => setOpenCreatePost(true)}>
-                            <AddIcon />
+                            <AddAPhotoIcon />
                         </button>
                     </div>
                 </div>
