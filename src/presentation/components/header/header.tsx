@@ -26,6 +26,9 @@ const Header = (): JSX.Element => {
                 <NavLink to={'/home'} activeClassName="activeRoute">
                     Inicio
                 </NavLink>
+                <NavLink to={'/categories'} activeClassName="activeRoute">
+                    Categorías
+                </NavLink>
             </div>
             <div className="right">
                 <NavLink to={'/login'} activeClassName="activeRoute">

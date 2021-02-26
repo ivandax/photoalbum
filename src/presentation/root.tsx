@@ -7,6 +7,7 @@ import Login from './views/login';
 import SignUp from './views/signUp';
 import Settings from './views/settings';
 import Admin from './views/admin';
+import Categories from './views/categories';
 
 //components
 import Header from './components/header';
@@ -31,6 +32,7 @@ const Root: React.FC = () => {
                     <Route path="/sign-up" component={SignUp}></Route>
                     <Route path="/settings" component={Settings}></Route>
                     <Route path="/admin" component={Admin}></Route>
+                    <Route path="/categories" component={Categories}></Route>
                     <Route path="/home" component={Home}></Route>
                     <Route path="/" component={Home}></Route>
                 </Switch>
