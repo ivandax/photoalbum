@@ -31,7 +31,7 @@ const Categories = (): JSX.Element => {
             return <Loader />;
         case 'successful':
             return sessionData.data.role === 'member' ? (
-                <div className="categories">Categories</div>
+                <div className="folders">Categories</div>
             ) : (
                 <div className="securityNotice">
                     <p>
