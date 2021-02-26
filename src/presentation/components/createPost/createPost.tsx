@@ -6,7 +6,7 @@ import { flow } from 'fp-ts/lib/function';
 import { Select, Checkbox, ListItemText, MenuItem, Input } from '@material-ui/core';
 
 import { UserWithId } from '../../../persistence/users';
-import { uploadFile, addPost } from '../../../persistence/posts';
+import { uploadFile, addPost, Post } from '../../../persistence/posts';
 
 import { State } from '../../../redux/index';
 
@@ -32,6 +32,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
         (state: State) => state.categoriesArray.categoriesArray
     );
     const photoRef = useRef<HTMLInputElement>(null);
+    const imagePreviewRef = useRef<HTMLImageElement>(null);
 
     const [onePhotoMessage, setOnePhotoMessage] = useState<O.Option<string>>(O.none);
     const [onePhotoPreview, setOnePhotoPreview] = useState<O.Option<PhotoReference>>(
@@ -122,7 +123,14 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                   O.getOrElse(() => sessionData.id)
                               );
                     const postId = `${sessionData.id}${now}`;
-                    const newPost = {
+                    const aspectRatio = pipe(
+                        O.fromNullable(imagePreviewRef.current),
+                        O.fold(
+                            () => 1,
+                            (image) => image.clientWidth / image.clientHeight
+                        )
+                    );
+                    const newPost: Post = {
                         postId,
                         title: onePhotoTitle,
                         postedBy: sessionData.id,
@@ -132,6 +140,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                         comments: [],
                         fileName: photoRef.handle.name,
                         categories: categories,
+                        aspectRatio: aspectRatio,
                         //picPreview: photoRef.base64,
                         //fileUrl: uploadedPhoto.downloadUrl,
                         //storageBucket: uploadedPhoto.bucket,
@@ -189,6 +198,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                 O.getOrElse(() => placeholder)
                             )}
                             alt="image preview for post"
+                            ref={imagePreviewRef}
                         />
                     </div>
                     {pipe(

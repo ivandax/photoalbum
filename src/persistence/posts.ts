@@ -23,6 +23,7 @@ export interface Post {
     comments: Comment[];
     fileName: string;
     categories: string[];
+    aspectRatio: number;
     //picPreview: string;
     //fileUrl: string;
     //storageBucket: string;
