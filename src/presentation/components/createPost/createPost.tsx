@@ -238,7 +238,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                                     (selected as string[]).join(', ')
                                                 }
                                             >
-                                                {categoryOptions.data.categories.map(
+                                                {categoryOptions.data.list.map(
                                                     (category: string, index) => (
                                                         <MenuItem
                                                             key={index}

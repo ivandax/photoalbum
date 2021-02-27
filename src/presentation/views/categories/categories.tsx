@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { Add as AddIcon } from '@material-ui/icons';
 
 //components
 import Loader from '../../components/loader';
+import CreateCategory from '../../components/createCategory';
 
 //hooks
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
@@ -18,6 +20,8 @@ const Categories = (): JSX.Element => {
     const history = useHistory();
     const sessionData = useSelector((state: State) => state.session.sessionData);
 
+    const [openCreateCategory, setOpenCreateCategory] = useState(false);
+
     useEffect(() => {
         if (sessionData.status === 'failed') {
             history.push('./login');
@@ -31,7 +35,18 @@ const Categories = (): JSX.Element => {
             return <Loader />;
         case 'successful':
             return sessionData.data.role === 'member' ? (
-                <div className="folders">Categories</div>
+                <div className="folders">
+                    <CreateCategory
+                        isOpen={openCreateCategory}
+                        onClose={() => setOpenCreateCategory(false)}
+                        sessionData={sessionData.data}
+                    />
+                    <div className="categoriesToolbar">
+                        <button onClick={() => setOpenCreateCategory(true)}>
+                            <AddIcon />
+                        </button>
+                    </div>
+                </div>
             ) : (
                 <div className="securityNotice">
                     <p>
