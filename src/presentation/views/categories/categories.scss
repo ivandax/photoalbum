@@ -37,6 +37,19 @@
             }
         }
     }
+
+    .foldersContent {
+        width: 100%;
+        @include flex-complete(
+            $direction: column,
+            $justify: flex-start,
+            $align: flex-start
+        );
+
+        select{
+            margin: 16px;
+        }
+    }
 }
 
 .blocked {

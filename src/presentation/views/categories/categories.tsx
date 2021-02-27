@@ -19,6 +19,9 @@ const Categories = (): JSX.Element => {
     useResetHeaderToggle();
     const history = useHistory();
     const sessionData = useSelector((state: State) => state.session.sessionData);
+    const categories = useSelector(
+        (state: State) => state.categoriesArray.categoriesArray
+    );
 
     const [openCreateCategory, setOpenCreateCategory] = useState(false);
 
@@ -36,17 +39,31 @@ const Categories = (): JSX.Element => {
         case 'successful':
             return sessionData.data.role === 'member' ? (
                 <div className="folders">
-                    <CreateCategory
-                        isOpen={openCreateCategory}
-                        onClose={() => setOpenCreateCategory(false)}
-                    />
-                    {sessionData.data.isAdmin ? (
-                        <div className="categoriesToolbar">
-                            <button onClick={() => setOpenCreateCategory(true)}>
-                                <AddIcon />
-                            </button>
+                    {categories.status === 'pending' ||
+                    categories.status === 'ongoing' ? (
+                        <Loader />
+                    ) : categories.status === 'failed' ? (
+                        <div>Error</div>
+                    ) : (
+                        <div className="foldersContent">
+                            <CreateCategory
+                                isOpen={openCreateCategory}
+                                onClose={() => setOpenCreateCategory(false)}
+                            />
+                            <select>
+                                {['All', ...categories.data.list].map((category) => (
+                                    <option key={category}>{category}</option>
+                                ))}
+                            </select>
+                            {sessionData.data.isAdmin ? (
+                                <div className="categoriesToolbar">
+                                    <button onClick={() => setOpenCreateCategory(true)}>
+                                        <AddIcon />
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
-                    ) : null}
+                    )}
                 </div>
             ) : (
                 <div className="securityNotice">
