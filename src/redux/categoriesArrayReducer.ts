@@ -40,16 +40,22 @@ export const setPendingCategoriesArray = (): SetPendingCategoriesArrayAction => 
 export const setOngoingCategoriesArray = (): SetOngoingCategoriesArrayAction => {
     return { type: 'setOngoingCategoriesArray' };
 };
-export const setFailedCategoriesArray = (error: string): SetFailedCategoriesArrayAction => {
+export const setFailedCategoriesArray = (
+    error: string
+): SetFailedCategoriesArrayAction => {
     return { type: 'setFailedCategoriesArray', error: error };
 };
-export const setSuccessfulCategoriesArray = (categoriesArray: CategoriesArray): SetSuccessfulCategoriesArrayAction => {
+export const setSuccessfulCategoriesArray = (
+    categoriesArray: CategoriesArray
+): SetSuccessfulCategoriesArrayAction => {
     return { type: 'setSuccessfulCategoriesArray', data: categoriesArray };
 };
 
 //STATE AND REDUCER
 
 const initialState: CategoriesArrayState = { categoriesArray: { status: 'pending' } };
+
+const removeCategoryAll = (array: string[]) => array.filter((item) => item !== 'All');
 
 function CategoriesArrayReducer(
     state = initialState,
@@ -69,7 +75,13 @@ function CategoriesArrayReducer(
                 },
             };
         case 'setSuccessfulCategoriesArray':
-            return { ...state, categoriesArray: { status: 'successful', data: action.data } };
+            return {
+                ...state,
+                categoriesArray: {
+                    status: 'successful',
+                    data: { list: removeCategoryAll(action.data.list) },
+                },
+            };
         default:
             return state;
     }

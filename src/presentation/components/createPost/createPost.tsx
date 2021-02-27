@@ -160,7 +160,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                             postedByName: userIdentifier,
                         };
                         const updateCategoriesProcess = await addPostReferenceToAllCategories(
-                            categories,
+                            [...categories, 'All'],//we add all post references to All by default.
                             postRef
                         );
                         if (updateCategoriesProcess.status === 'failed') {

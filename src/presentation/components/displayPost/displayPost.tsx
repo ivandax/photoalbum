@@ -136,7 +136,7 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         actionConfirmation="Sí, borrar"
                         confirmationCallback={() => {
                             removePostReferenceFromAllCategories(
-                                post.categories,
+                                [...post.categories, 'All'],//we also remove from All by default
                                 post.postId
                             );
                             deletePost(post.postId, post.fileName);

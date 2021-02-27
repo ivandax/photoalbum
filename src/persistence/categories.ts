@@ -5,7 +5,6 @@ import 'firebase/firestore';
 
 export interface CategoriesArray {
     list: string[];
-    createdOn: number;
 }
 
 export interface Category {
