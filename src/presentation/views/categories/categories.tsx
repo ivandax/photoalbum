@@ -28,6 +28,7 @@ const Categories = (): JSX.Element => {
         }
     }, [sessionData.status]);
 
+
     switch (sessionData.status) {
         case 'pending':
         case 'ongoing':
@@ -39,7 +40,6 @@ const Categories = (): JSX.Element => {
                     <CreateCategory
                         isOpen={openCreateCategory}
                         onClose={() => setOpenCreateCategory(false)}
-                        sessionData={sessionData.data}
                     />
                     <div className="categoriesToolbar">
                         <button onClick={() => setOpenCreateCategory(true)}>

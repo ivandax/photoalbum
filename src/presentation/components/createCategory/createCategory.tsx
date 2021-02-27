@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
 
-import { UserWithId } from '../../../persistence/users';
+//persistence
+import { addCategory, Category } from '../../../persistence/categories';
 
-import { State } from '../../../redux/index';
+//redux
+import { setPendingCategoriesArray } from '../../../redux/categoriesArrayReducer';
 
+//components
 import FormInput from '../formInput';
 
 import './createCategory.scss';
@@ -14,18 +17,18 @@ import './createCategory.scss';
 interface CreateCategoryProps {
     isOpen: boolean;
     onClose: () => void;
-    sessionData: UserWithId;
 }
 
 const CreateCategory = (props: CreateCategoryProps): JSX.Element => {
-    const { sessionData, isOpen, onClose } = props;
-    const categoryOptions = useSelector(
-        (state: State) => state.categoriesArray.categoriesArray
-    );
+    const dispatch = useDispatch();
+    const { isOpen, onClose } = props;
     const [localUpdateProcess, setLocalUpdateProcess] = useState('resolved');
     const [categoryName, setCategoryName] = useState<O.Option<string>>(O.none);
+    const [addCategoryError, setAddCategoryError] = useState<O.Option<string>>(O.none);
 
     const handleCleanUpAndClose = (): void => {
+        setLocalUpdateProcess('resolved');
+        setCategoryName(O.none);
         onClose();
     };
 
@@ -37,8 +40,20 @@ const CreateCategory = (props: CreateCategoryProps): JSX.Element => {
             O.fold(
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 () => {},
-                (name) => {
-                    console.log(name);
+                async (name) => {
+                    const newCategory: Category = {
+                        postReferences: [],
+                        createdOn: +new Date(),
+                        name: name,
+                        categoryId: name,
+                    };
+                    const result = await addCategory(newCategory);
+                    if (result.status === 'successful') {
+                        dispatch(setPendingCategoriesArray());
+                        handleCleanUpAndClose();
+                    } else {
+                        setAddCategoryError(O.some(result.error));
+                    }
                 }
             )
         );
@@ -73,13 +88,20 @@ const CreateCategory = (props: CreateCategoryProps): JSX.Element => {
                         className="categoryName"
                     />
                 </div>
+                {pipe(
+                    addCategoryError,
+                    O.fold(
+                        () => null,
+                        (error) => <div>{error}</div>
+                    )
+                )}
                 <div className="post">
                     <button
                         disabled={O.isNone(categoryName)}
                         onClick={handlePost}
                         className={O.isSome(categoryName) ? 'readyToPost' : ''}
                     >
-                        Publicar
+                        Crear
                     </button>
                     <button onClick={handleCleanUpAndClose}>Cerrar</button>
                 </div>

@@ -18,10 +18,10 @@ function useValidateAuthentication(): CategoriesArrayState['categoriesArray'] {
     useEffect(() => {
         const onGetUsers = async () => {
             dispatch(setOngoingCategoriesArray());
-            const categoriesArray = await getCategoriesArray();
-            typeof categoriesArray === "string" || categoriesArray === undefined
-                ? dispatch(setFailedCategoriesArray("Error obteniendo categorias"))
-                : dispatch(setSuccessfulCategoriesArray(categoriesArray));
+            const categoriesList = await getCategoriesArray();
+            typeof categoriesList === 'string'
+                ? dispatch(setFailedCategoriesArray('Error obteniendo categorias'))
+                : dispatch(setSuccessfulCategoriesArray(categoriesList));
         };
         if (categoriesArray.status === 'pending') {
             onGetUsers();
