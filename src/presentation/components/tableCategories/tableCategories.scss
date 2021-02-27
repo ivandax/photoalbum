@@ -1,0 +1,13 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+
+.tableCategories{
+    background-color: white;
+    color: black;
+    padding: 4px 10px 4px 10px;
+    border: 0px;
+    margin: 0px;
+    font-weight: normal;
+    white-space: nowrap;
+    z-index: 3;
+}

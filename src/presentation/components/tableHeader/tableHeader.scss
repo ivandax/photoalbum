@@ -1,0 +1,19 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+
+.tableHeader{
+    background-color: $wbdBlue;
+    color: white;
+    padding: 4px;
+    border: 0px;
+    margin: 0px;
+    font-weight: normal;
+    white-space: nowrap;
+    padding: 4px 10px 4px 10px;
+
+    &:hover{
+        cursor: pointer;
+        background-color: $wbdBlueLight;
+        transition: 0.3s;
+    }
+}

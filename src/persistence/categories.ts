@@ -4,7 +4,22 @@ import 'firebase/firestore';
 //Interfaces
 
 export interface CategoriesArray {
-    categories: string[];
+    list: string[];
+    createdOn: number;
+}
+
+export interface Category {
+    postReferences: PostReference[];
+    createdOn: number;
+    name: string;
+    categoryId: string;
+}
+
+interface PostReference {
+    postId: string;
+    postTitle: string;
+    postedById: string;
+    postedByName: string;
 }
 
 //Functions
