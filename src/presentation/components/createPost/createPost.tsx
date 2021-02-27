@@ -7,6 +7,10 @@ import { Select, Checkbox, ListItemText, MenuItem, Input } from '@material-ui/co
 
 import { UserWithId } from '../../../persistence/users';
 import { uploadFile, addPost, Post } from '../../../persistence/posts';
+import {
+    addPostReferenceToAllCategories,
+    PostReference,
+} from '../../../persistence/categories';
 
 import { State } from '../../../redux/index';
 
@@ -149,6 +153,19 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                     if (postedPhoto.status === 'failed') {
                         setOnePhotoMessage(O.some(postedPhoto.error));
                     } else {
+                        const postRef: PostReference = {
+                            postId,
+                            postTitle: onePhotoTitle,
+                            postedById: sessionData.id,
+                            postedByName: userIdentifier,
+                        };
+                        const updateCategoriesProcess = await addPostReferenceToAllCategories(
+                            categories,
+                            postRef
+                        );
+                        if (updateCategoriesProcess.status === 'failed') {
+                            console.log(updateCategoriesProcess.error);
+                        }
                         handleCleanUpAndClose();
                     }
                     setLocalUpdateProcess('resolved');
