@@ -28,7 +28,6 @@ const Categories = (): JSX.Element => {
         }
     }, [sessionData.status]);
 
-
     switch (sessionData.status) {
         case 'pending':
         case 'ongoing':
@@ -41,11 +40,13 @@ const Categories = (): JSX.Element => {
                         isOpen={openCreateCategory}
                         onClose={() => setOpenCreateCategory(false)}
                     />
-                    <div className="categoriesToolbar">
-                        <button onClick={() => setOpenCreateCategory(true)}>
-                            <AddIcon />
-                        </button>
-                    </div>
+                    {sessionData.data.isAdmin ? (
+                        <div className="categoriesToolbar">
+                            <button onClick={() => setOpenCreateCategory(true)}>
+                                <AddIcon />
+                            </button>
+                        </div>
+                    ) : null}
                 </div>
             ) : (
                 <div className="securityNotice">
