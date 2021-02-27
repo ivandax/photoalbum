@@ -9,6 +9,7 @@ import {
 
 //persistence
 import { Post, getPostImage, deletePost } from '../../../persistence/posts';
+import { removePostReferenceFromAllCategories } from '../../../persistence/categories';
 import { UserWithId } from '../../../persistence/users';
 
 //actions
@@ -133,9 +134,13 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         onClose={() => setIsOpenConfirmationModal(false)}
                         message="Atención! Se borrará esta publicación, la foto asociada y todos los comentarios. Seguro que quieres borrar?"
                         actionConfirmation="Sí, borrar"
-                        confirmationCallback={() =>
-                            deletePost(post.postId, post.fileName)
-                        }
+                        confirmationCallback={() => {
+                            removePostReferenceFromAllCategories(
+                                post.categories,
+                                post.postId
+                            );
+                            deletePost(post.postId, post.fileName);
+                        }}
                     />
                 </div>
             ) : null}

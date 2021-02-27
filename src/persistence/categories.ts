@@ -175,11 +175,51 @@ async function addPostReferenceToCategory(
     }
 }
 
-interface AllPostReferencesAddedSuccess {
+interface RemovePostReferenceFromCategorySuccess {
     status: 'successful';
 }
 
-interface AllPostReferencesAddedyFailure {
+interface RemovePostReferenceFromCategoryFailure {
+    status: 'failed';
+    error: string;
+}
+
+async function removePostReferenceFromCategory(
+    category: string,
+    postId: string
+): Promise<
+    RemovePostReferenceFromCategorySuccess | RemovePostReferenceFromCategoryFailure
+> {
+    const currentCategory = await getCategory(category);
+    if (typeof currentCategory === 'string') {
+        return {
+            status: 'failed',
+            error: 'Error obteniendo categoría para agregar referencia.',
+        };
+    } else {
+        const currentReferences = currentCategory.postReferences;
+        const newReferences = currentReferences.reduce(
+            (soFar: PostReference[], currentRef: PostReference) =>
+                currentRef.postId === postId ? soFar : [...soFar, currentRef],
+            []
+        );
+        const db = getDbInstance();
+        await db
+            .collection('categories')
+            .doc(category)
+            .set({ postReferences: newReferences }, { merge: true });
+        console.log('Eliminado de ' + category);
+        return {
+            status: 'successful',
+        };
+    }
+}
+
+interface AllPostReferencesUpdatedSuccess {
+    status: 'successful';
+}
+
+interface AllPostReferencesUpdatedFailure {
     status: 'failed';
     error: string;
 }
@@ -187,7 +227,7 @@ interface AllPostReferencesAddedyFailure {
 async function addPostReferenceToAllCategories(
     categories: string[],
     postReference: PostReference
-): Promise<AllPostReferencesAddedSuccess | AllPostReferencesAddedyFailure> {
+): Promise<AllPostReferencesUpdatedSuccess | AllPostReferencesUpdatedFailure> {
     const processes = await Promise.all(
         categories.map(
             async (category) => await addPostReferenceToCategory(category, postReference)
@@ -198,9 +238,33 @@ async function addPostReferenceToAllCategories(
     } else {
         return {
             status: 'failed',
-            error: 'No todas las categorías se han actualizado con el post.',
+            error: 'No todas las categorías se han actualizado agregando el post ref',
         };
     }
 }
 
-export { getCategoriesArray, addCategory, addPostReferenceToAllCategories };
+async function removePostReferenceFromAllCategories(
+    categories: string[],
+    postId: string
+): Promise<AllPostReferencesUpdatedSuccess | AllPostReferencesUpdatedFailure> {
+    const processes = await Promise.all(
+        categories.map(
+            async (category) => await removePostReferenceFromCategory(category, postId)
+        )
+    );
+    if (processes.every((result) => result.status === 'successful')) {
+        return { status: 'successful' };
+    } else {
+        return {
+            status: 'failed',
+            error: 'No todas las categorías se han actualizado eliminando el post ref',
+        };
+    }
+}
+
+export {
+    getCategoriesArray,
+    addCategory,
+    addPostReferenceToAllCategories,
+    removePostReferenceFromAllCategories,
+};
