@@ -143,7 +143,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                         updatedOn: now,
                         comments: [],
                         fileName: photoRef.handle.name,
-                        categories: [...categories, 'All'],
+                        categories: [...categories, 'Todo'],
                         aspectRatio: aspectRatio,
                         //picPreview: photoRef.base64,
                         //fileUrl: uploadedPhoto.downloadUrl,
@@ -160,7 +160,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                             postedByName: userIdentifier,
                         };
                         const updateCategoriesProcess = await addPostReferenceToAllCategories(
-                            [...categories, 'All'], //we add all post references to All by default.
+                            [...categories, 'Todo'], //we add all post references to All by default.
                             postRef
                         );
                         if (updateCategoriesProcess.status === 'failed') {

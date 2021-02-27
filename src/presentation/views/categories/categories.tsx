@@ -51,7 +51,7 @@ const Categories = (): JSX.Element => {
                                 onClose={() => setOpenCreateCategory(false)}
                             />
                             <select>
-                                {['All', ...categories.data.list].map((category) => (
+                                {['Todo', ...categories.data.list].map((category) => (
                                     <option key={category}>{category}</option>
                                 ))}
                             </select>

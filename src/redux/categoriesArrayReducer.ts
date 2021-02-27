@@ -55,7 +55,7 @@ export const setSuccessfulCategoriesArray = (
 
 const initialState: CategoriesArrayState = { categoriesArray: { status: 'pending' } };
 
-const removeCategoryAll = (array: string[]) => array.filter((item) => item !== 'All');
+const removeCategoryAll = (array: string[]) => array.filter((item) => item !== 'Todo');
 
 function CategoriesArrayReducer(
     state = initialState,
