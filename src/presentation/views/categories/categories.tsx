@@ -6,7 +6,6 @@ import { Add as AddIcon } from '@material-ui/icons';
 //components
 import Loader from '../../components/loader';
 import CreateCategory from '../../components/createCategory';
-import CategorySelector from '../../components/categorySelector';
 import PostReferenceTable from '../../components/photoReferenceTable';
 
 //hooks
@@ -21,12 +20,8 @@ const Categories = (): JSX.Element => {
     useResetHeaderToggle();
     const history = useHistory();
     const sessionData = useSelector((state: State) => state.session.sessionData);
-    const categoriesOptions = useSelector(
-        (state: State) => state.categoriesArray.categoriesArray
-    );
 
     const [openCreateCategory, setOpenCreateCategory] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState('Todo');
 
     useEffect(() => {
         if (sessionData.status === 'failed') {
@@ -47,16 +42,7 @@ const Categories = (): JSX.Element => {
                             isOpen={openCreateCategory}
                             onClose={() => setOpenCreateCategory(false)}
                         />
-                        <CategorySelector
-                            options={
-                                categoriesOptions.status === 'successful'
-                                    ? categoriesOptions.data.list
-                                    : []
-                            }
-                            initialValue={selectedCategory}
-                            setState={setSelectedCategory}
-                        />
-                        <PostReferenceTable selection={selectedCategory} />
+                        <PostReferenceTable />
                         {sessionData.data.isAdmin ? (
                             <div className="categoriesToolbar">
                                 <button onClick={() => setOpenCreateCategory(true)}>

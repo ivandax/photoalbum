@@ -2,7 +2,7 @@
 @import '../../../style/mixins.scss';
 
 .tableHeader{
-    background-color: $darkblue;
+    background-color: $primary;
     color: white;
     padding: 4px;
     border: 0px;
@@ -10,10 +10,11 @@
     font-weight: normal;
     white-space: nowrap;
     padding: 4px 10px 4px 10px;
+    border-radius: 8px;
 
     &:hover{
         cursor: pointer;
-        background-color: $darkblue;
+        background-color: $primary;
         transition: 0.3s;
     }
 }

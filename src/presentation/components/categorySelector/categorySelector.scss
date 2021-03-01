@@ -1,0 +1,12 @@
+@import '../../../style/mixins.scss';
+@import '../../../style/variables.scss';
+
+.categorySelector {
+    padding: 4px;
+    border-radius: 8px;
+    margin: 16px;
+
+    .categoryOption {
+        padding: 4px;
+    }
+}

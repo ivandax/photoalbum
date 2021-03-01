@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
     setOngoingCategories,
     setSuccessfulCategories,
     setFailedCategories,
+    setPendingCategories,
 } from '../../../redux/categoryViewReducer';
 
 import { getCategories } from '../../../persistence/categories';
@@ -15,16 +16,18 @@ import Loader from '../../components/loader';
 import TableCell from '../tableCell';
 import TableHeader from '../tableHeader';
 import TableRow from '../tableRow';
+import CategorySelector from '../categorySelector';
 
 import './postReferenceTable.scss';
 
-interface postReferenceTableProps {
-    selection: string;
-}
-
-const postReferenceTable = ({ selection }: postReferenceTableProps): JSX.Element => {
+const postReferenceTable = (): JSX.Element => {
     const categories = useSelector((state: State) => state.categoriesView.categories);
+    const categoriesOptions = useSelector(
+        (state: State) => state.categoriesArray.categoriesArray
+    );
     const dispatch = useDispatch();
+
+    const [selection, setSelection] = useState('Todo');
 
     useEffect(() => {
         const onGetCategories = async () => {
@@ -39,7 +42,7 @@ const postReferenceTable = ({ selection }: postReferenceTableProps): JSX.Element
         if (categories.status === 'pending') {
             onGetCategories();
         }
-    }, []);
+    }, [categories.status]);
 
     switch (categories.status) {
         case 'pending':
@@ -52,63 +55,83 @@ const postReferenceTable = ({ selection }: postReferenceTableProps): JSX.Element
                 (category) => category.name === selection
             );
             return (
-                <table className="postReferenceTable">
-                    <thead>
-                        <tr>
-                            <TableHeader
-                                value="Title"
-                                axisX={0}
-                                field="category"
-                                reorder={(field) => console.log(field)}
-                            />
-                            <TableHeader
-                                value="Creación"
-                                axisX={1}
-                                field="createdOn"
-                                reorder={(field) => console.log(field)}
-                            />
-                            <TableHeader
-                                value="Posteado por"
-                                axisX={2}
-                                field="postedByName"
-                                reorder={(field) => console.log(field)}
-                            />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {selectedCategory ? (
-                            selectedCategory.postReferences.map((category, index) => (
-                                <TableRow key={category.postId} axisY={index}>
-                                    <TableCell
-                                        value={category.postTitle}
-                                        axisX={0}
-                                        amTotal={false}
-                                        columnHeader="Title"
-                                        orderedBy=""
-                                    />
-                                    <TableCell
-                                        value={`${new Date(
-                                            category.createdOn
-                                        ).toLocaleDateString('es-ES')}`}
-                                        axisX={1}
-                                        amTotal={false}
-                                        columnHeader="createdOn"
-                                        orderedBy=""
-                                    />
-                                    <TableCell
-                                        value={category.postedByName}
-                                        axisX={2}
-                                        amTotal={false}
-                                        columnHeader="postedByName"
-                                        orderedBy=""
-                                    />
-                                </TableRow>
-                            ))
-                        ) : (
-                            <div>Error. No match for the selection.</div>
-                        )}
-                    </tbody>
-                </table>
+                <>
+                    <div className="postReferenceTableActions">
+                        <CategorySelector
+                            options={
+                                categoriesOptions.status === 'successful'
+                                    ? categoriesOptions.data.list
+                                    : []
+                            }
+                            initialValue={selection}
+                            setState={setSelection}
+                        />
+                        <button onClick={() => dispatch(setPendingCategories())}>
+                            Refrescar
+                        </button>
+                    </div>
+                    <table className="postReferenceTable">
+                        <thead>
+                            <tr>
+                                <TableHeader
+                                    value="Title"
+                                    axisX={0}
+                                    field="category"
+                                    reorder={(field) => console.log(field)}
+                                />
+                                <TableHeader
+                                    value="Creación"
+                                    axisX={1}
+                                    field="createdOn"
+                                    reorder={(field) => console.log(field)}
+                                />
+                                <TableHeader
+                                    value="Posteado por"
+                                    axisX={2}
+                                    field="postedByName"
+                                    reorder={(field) => console.log(field)}
+                                />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {selectedCategory ? (
+                                selectedCategory.postReferences.map((category, index) => (
+                                    <TableRow key={category.postId} axisY={index}>
+                                        <TableCell
+                                            value={
+                                                category.postTitle === ''
+                                                    ? category.postId
+                                                    : category.postTitle
+                                            }
+                                            axisX={0}
+                                            amTotal={false}
+                                            columnHeader="Title"
+                                            orderedBy=""
+                                        />
+                                        <TableCell
+                                            value={`${new Date(
+                                                category.createdOn
+                                            ).toLocaleDateString('es-ES')}`}
+                                            axisX={1}
+                                            amTotal={false}
+                                            columnHeader="createdOn"
+                                            orderedBy=""
+                                        />
+                                        <TableCell
+                                            value={category.postedByName}
+                                            axisX={2}
+                                            amTotal={false}
+                                            columnHeader="postedByName"
+                                            orderedBy=""
+                                        />
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <div>Error. No match for the selection.</div>
+                            )}
+                        </tbody>
+                    </table>
+                </>
             );
     }
 };

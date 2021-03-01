@@ -17,9 +17,15 @@ const CategorySelector = (props: CategorySelectorProps): JSX.Element => {
     };
 
     return (
-        <select onChange={handleSelection} value={initialValue}>
+        <select
+            onChange={handleSelection}
+            value={initialValue}
+            className="categorySelector"
+        >
             {['Todo', ...options].map((option) => (
-                <option key={option}>{option}</option>
+                <option className="categoryOption" key={option}>
+                    {option}
+                </option>
             ))}
         </select>
     );
