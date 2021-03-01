@@ -7,6 +7,7 @@ import categoriesArrayReducer, { CategoriesArrayState } from './categoriesArrayR
 import adminPanelReducer, { AdminPanelState } from './adminPanelReducer';
 import commentSectionReducer, { CommentSectionState } from './commentSectionReducer';
 import homeViewReducer, { HomeViewState } from './homeViewReducer';
+import categoriesViewReducer, { CategoriesViewState } from './categoryViewReducer';
 
 export type State = {
     headerToggle: HeaderToggleState;
@@ -16,6 +17,7 @@ export type State = {
     adminPanel: AdminPanelState;
     commentSection: CommentSectionState;
     homeView: HomeViewState;
+    categoriesView: CategoriesViewState;
 };
 
 const rootReducers = combineReducers({
@@ -26,6 +28,7 @@ const rootReducers = combineReducers({
     adminPanel: adminPanelReducer,
     commentSection: commentSectionReducer,
     homeView: homeViewReducer,
+    categoriesView: categoriesViewReducer,
 });
 
 export default rootReducers;

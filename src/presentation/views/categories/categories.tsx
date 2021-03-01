@@ -6,6 +6,8 @@ import { Add as AddIcon } from '@material-ui/icons';
 //components
 import Loader from '../../components/loader';
 import CreateCategory from '../../components/createCategory';
+import CategorySelector from '../../components/categorySelector';
+import PostReferenceTable from '../../components/photoReferenceTable';
 
 //hooks
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';
@@ -19,11 +21,12 @@ const Categories = (): JSX.Element => {
     useResetHeaderToggle();
     const history = useHistory();
     const sessionData = useSelector((state: State) => state.session.sessionData);
-    const categories = useSelector(
+    const categoriesOptions = useSelector(
         (state: State) => state.categoriesArray.categoriesArray
     );
 
     const [openCreateCategory, setOpenCreateCategory] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState('Todo');
 
     useEffect(() => {
         if (sessionData.status === 'failed') {
@@ -39,31 +42,29 @@ const Categories = (): JSX.Element => {
         case 'successful':
             return sessionData.data.role === 'member' ? (
                 <div className="folders">
-                    {categories.status === 'pending' ||
-                    categories.status === 'ongoing' ? (
-                        <Loader />
-                    ) : categories.status === 'failed' ? (
-                        <div>Error</div>
-                    ) : (
-                        <div className="foldersContent">
-                            <CreateCategory
-                                isOpen={openCreateCategory}
-                                onClose={() => setOpenCreateCategory(false)}
-                            />
-                            <select>
-                                {['Todo', ...categories.data.list].map((category) => (
-                                    <option key={category}>{category}</option>
-                                ))}
-                            </select>
-                            {sessionData.data.isAdmin ? (
-                                <div className="categoriesToolbar">
-                                    <button onClick={() => setOpenCreateCategory(true)}>
-                                        <AddIcon />
-                                    </button>
-                                </div>
-                            ) : null}
-                        </div>
-                    )}
+                    <div className="foldersContent">
+                        <CreateCategory
+                            isOpen={openCreateCategory}
+                            onClose={() => setOpenCreateCategory(false)}
+                        />
+                        <CategorySelector
+                            options={
+                                categoriesOptions.status === 'successful'
+                                    ? categoriesOptions.data.list
+                                    : []
+                            }
+                            initialValue={selectedCategory}
+                            setState={setSelectedCategory}
+                        />
+                        <PostReferenceTable selection={selectedCategory} />
+                        {sessionData.data.isAdmin ? (
+                            <div className="categoriesToolbar">
+                                <button onClick={() => setOpenCreateCategory(true)}>
+                                    <AddIcon />
+                                </button>
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
             ) : (
                 <div className="securityNotice">

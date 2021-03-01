@@ -25,7 +25,7 @@ interface CreatePostProps {
     sessionData: UserWithId;
 }
 
-interface PhotoReference {
+interface postReference {
     handle: File;
     base64: string;
 }
@@ -39,7 +39,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     const imagePreviewRef = useRef<HTMLImageElement>(null);
 
     const [onePhotoMessage, setOnePhotoMessage] = useState<O.Option<string>>(O.none);
-    const [onePhotoPreview, setOnePhotoPreview] = useState<O.Option<PhotoReference>>(
+    const [onePhotoPreview, setOnePhotoPreview] = useState<O.Option<postReference>>(
         O.none
     );
     const [onePhotoTitle, setOnePhotoTitle] = useState('');
@@ -158,6 +158,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                             postTitle: onePhotoTitle,
                             postedById: sessionData.id,
                             postedByName: userIdentifier,
+                            createdOn: now,
                         };
                         const updateCategoriesProcess = await addPostReferenceToAllCategories(
                             [...categories, 'Todo'], //we add all post references to All by default.

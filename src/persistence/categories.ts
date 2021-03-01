@@ -19,6 +19,16 @@ export interface PostReference {
     postTitle: string;
     postedById: string;
     postedByName: string;
+    createdOn: number;
+}
+
+interface AsyncSuccess {
+    status: 'successful';
+}
+
+interface AsyncFailure {
+    status: 'failed';
+    error: string;
 }
 
 //Functions
@@ -57,18 +67,9 @@ async function getCategoriesArray(): Promise<CategoriesArray | string> {
     }
 }
 
-interface AddToCategoriesArraySuccess {
-    status: 'successful';
-}
-
-interface AddToCategoriesArrayFailure {
-    status: 'failed';
-    error: string;
-}
-
 async function addToCategoriesArray(
     newCategory: string
-): Promise<AddToCategoriesArraySuccess | AddToCategoriesArrayFailure> {
+): Promise<AsyncSuccess | AsyncFailure> {
     try {
         const currentCategories = await getCategoriesArray();
         if (typeof currentCategories !== 'string') {
@@ -96,18 +97,7 @@ async function addToCategoriesArray(
     }
 }
 
-interface CategorySuccess {
-    status: 'successful';
-}
-
-interface CategoryFailure {
-    status: 'failed';
-    error: string;
-}
-
-const addCategory = async (
-    item: Category
-): Promise<CategorySuccess | CategoryFailure> => {
+const addCategory = async (item: Category): Promise<AsyncSuccess | AsyncFailure> => {
     try {
         const addToCategoriesArrayProcess = await addToCategoriesArray(item.name);
         if (addToCategoriesArrayProcess.status === 'successful') {
@@ -138,19 +128,10 @@ async function getCategory(category: string): Promise<string | Category> {
     }
 }
 
-interface AddPostReferenceToCategorySuccess {
-    status: 'successful';
-}
-
-interface AddPostReferenceToCategoryFailure {
-    status: 'failed';
-    error: string;
-}
-
 async function addPostReferenceToCategory(
     category: string,
     postReference: PostReference
-): Promise<AddPostReferenceToCategorySuccess | AddPostReferenceToCategoryFailure> {
+): Promise<AsyncSuccess | AsyncFailure> {
     const currentCategory = await getCategory(category);
     if (typeof currentCategory === 'string') {
         return {
@@ -174,21 +155,10 @@ async function addPostReferenceToCategory(
     }
 }
 
-interface RemovePostReferenceFromCategorySuccess {
-    status: 'successful';
-}
-
-interface RemovePostReferenceFromCategoryFailure {
-    status: 'failed';
-    error: string;
-}
-
 async function removePostReferenceFromCategory(
     category: string,
     postId: string
-): Promise<
-    RemovePostReferenceFromCategorySuccess | RemovePostReferenceFromCategoryFailure
-> {
+): Promise<AsyncSuccess | AsyncFailure> {
     const currentCategory = await getCategory(category);
     if (typeof currentCategory === 'string') {
         return {
@@ -214,19 +184,10 @@ async function removePostReferenceFromCategory(
     }
 }
 
-interface AllPostReferencesUpdatedSuccess {
-    status: 'successful';
-}
-
-interface AllPostReferencesUpdatedFailure {
-    status: 'failed';
-    error: string;
-}
-
 async function addPostReferenceToAllCategories(
     categories: string[],
     postReference: PostReference
-): Promise<AllPostReferencesUpdatedSuccess | AllPostReferencesUpdatedFailure> {
+): Promise<AsyncSuccess | AsyncFailure> {
     const processes = await Promise.all(
         categories.map(
             async (category) => await addPostReferenceToCategory(category, postReference)
@@ -245,7 +206,7 @@ async function addPostReferenceToAllCategories(
 async function removePostReferenceFromAllCategories(
     categories: string[],
     postId: string
-): Promise<AllPostReferencesUpdatedSuccess | AllPostReferencesUpdatedFailure> {
+): Promise<AsyncSuccess | AsyncFailure> {
     const processes = await Promise.all(
         categories.map(
             async (category) => await removePostReferenceFromCategory(category, postId)
@@ -261,9 +222,32 @@ async function removePostReferenceFromAllCategories(
     }
 }
 
+async function getCategories(): Promise<Category[] | string> {
+    const db = getDbInstance();
+    const categories: Category[] = [];
+    try {
+        await db
+            .collection('categories')
+            .orderBy('createdOn')
+            .get()
+            .then(function (querySnapshot) {
+                querySnapshot.forEach((doc) => {
+                    const data = parseCategory(doc);
+                    if (data) {
+                        categories.push(data);
+                    }
+                });
+            });
+        return categories;
+    } catch (e) {
+        return `Error al traer categorías - ${e.message}`;
+    }
+}
+
 export {
     getCategoriesArray,
     addCategory,
     addPostReferenceToAllCategories,
     removePostReferenceFromAllCategories,
+    getCategories,
 };

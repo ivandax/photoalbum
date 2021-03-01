@@ -2,7 +2,7 @@
 @import '../../../style/mixins.scss';
 
 .tableHeader{
-    background-color: $wbdBlue;
+    background-color: $darkblue;
     color: white;
     padding: 4px;
     border: 0px;
@@ -13,7 +13,7 @@
 
     &:hover{
         cursor: pointer;
-        background-color: $wbdBlueLight;
+        background-color: $darkblue;
         transition: 0.3s;
     }
 }
