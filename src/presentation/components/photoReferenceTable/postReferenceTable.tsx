@@ -76,7 +76,7 @@ const postReferenceTable = (): JSX.Element => {
                                 <TableHeader
                                     value="Title"
                                     axisX={0}
-                                    field="category"
+                                    field="title"
                                     reorder={(field) => console.log(field)}
                                 />
                                 <TableHeader
@@ -107,6 +107,7 @@ const postReferenceTable = (): JSX.Element => {
                                             amTotal={false}
                                             columnHeader="Title"
                                             orderedBy=""
+                                            className="postReferenceTitle"
                                         />
                                         <TableCell
                                             value={`${new Date(

@@ -8,6 +8,7 @@ interface TableCellProps {
     amTotal: boolean;
     columnHeader: string;
     orderedBy: string;
+    className?: string;
 }
 
 const TableCell = ({
@@ -16,10 +17,11 @@ const TableCell = ({
     amTotal,
     columnHeader,
     orderedBy,
+    className,
 }: TableCellProps): JSX.Element => {
     return (
         <td
-            className={`tableCell ${axisX} ${amTotal ? 'total' : ''} ${
+            className={`tableCell ${className} ${axisX} ${amTotal ? 'total' : ''} ${
                 columnHeader === orderedBy ? 'highlight' : ''
             }`}
         >

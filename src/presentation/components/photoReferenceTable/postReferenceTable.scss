@@ -6,24 +6,27 @@
     color: black;
     padding: 4px 10px 4px 10px;
     border: 0px;
-    margin: 16px;
+    margin: 16px auto;
     font-weight: normal;
     white-space: nowrap;
     z-index: 3;
     width: 90%;
     border-radius: 8px;
+
+    @media only screen and (min-width: $tablet) {
+        width: 75%;
+    }
 }
 
 .postReferenceTableActions {
     width: 100%;
     @include flex-complete($direction: row, $justify: space-around, $align: center);
 
-    button{
+    button {
         border: none;
         padding: 6px;
         background-color: $primary;
         color: white;
         border-radius: 8px;
     }
-
 }
