@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -104,9 +105,11 @@ const postReferenceTable = (): JSX.Element => {
                                     <TableRow key={category.postId} axisY={index}>
                                         <TableCell
                                             value={
-                                                category.postTitle === ''
-                                                    ? category.postId
-                                                    : category.postTitle
+                                                <Link to={`./viewer/${category.postId}`}>
+                                                    {category.postTitle === ''
+                                                        ? category.postId
+                                                        : category.postTitle}
+                                                </Link>
                                             }
                                             axisX={0}
                                             amTotal={false}

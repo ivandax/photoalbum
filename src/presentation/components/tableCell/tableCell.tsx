@@ -3,7 +3,7 @@ import React from 'react';
 import './tableCell.scss';
 
 interface TableCellProps {
-    value: string;
+    value: string | JSX.Element;
     axisX: number;
     amTotal: boolean;
     columnHeader: string;

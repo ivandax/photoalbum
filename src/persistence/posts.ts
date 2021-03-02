@@ -225,6 +225,20 @@ const deleteComment = async (commentId: string, postId: string): Promise<void> =
     }
 };
 
+async function getPost(id: string): Promise<Post | string> {
+    const db = getDbInstance();
+    try {
+        const doc = await db
+            .collection('posts')
+            .doc(id)
+            .get()
+            .then((doc) => parsePost(doc));
+        return doc ? doc : 'Error parseando el post';
+    } catch (e) {
+        return `Error cargando el post - ${e.message}`;
+    }
+}
+
 export {
     addPost,
     uploadFile,
@@ -234,4 +248,5 @@ export {
     addComment,
     deleteComment,
     deletePost,
+    getPost,
 };
