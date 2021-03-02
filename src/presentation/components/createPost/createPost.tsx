@@ -243,7 +243,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                                             type="text"
                                             onChange={(value) => setOnePhotoTitle(value)}
                                             className="photoTitle"
-                                            maxLength={120}
+                                            maxLength={60}
                                         />
                                         {categoryOptions.status === 'successful' ? (
                                             <Select
