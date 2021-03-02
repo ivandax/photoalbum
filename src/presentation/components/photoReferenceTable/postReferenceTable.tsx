@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -6,6 +6,7 @@ import {
     setSuccessfulCategories,
     setFailedCategories,
     setPendingCategories,
+    setSelectedCategory,
 } from '../../../redux/categoryViewReducer';
 
 import { getCategories } from '../../../persistence/categories';
@@ -21,13 +22,17 @@ import CategorySelector from '../categorySelector';
 import './postReferenceTable.scss';
 
 const postReferenceTable = (): JSX.Element => {
-    const categories = useSelector((state: State) => state.categoriesView.categories);
+    const { categories, selectedCategory } = useSelector(
+        (state: State) => state.categoriesView
+    );
     const categoriesOptions = useSelector(
         (state: State) => state.categoriesArray.categoriesArray
     );
     const dispatch = useDispatch();
 
-    const [selection, setSelection] = useState('Todo');
+    const setCategorySelection = (category: string) => {
+        dispatch(setSelectedCategory(category));
+    };
 
     useEffect(() => {
         const onGetCategories = async () => {
@@ -51,8 +56,8 @@ const postReferenceTable = (): JSX.Element => {
         case 'failed':
             return <div>{categories.error}</div>;
         case 'successful':
-            const selectedCategory = categories.data.find(
-                (category) => category.name === selection
+            const selected = categories.data.find(
+                (category) => category.name === selectedCategory
             );
             return (
                 <>
@@ -63,8 +68,8 @@ const postReferenceTable = (): JSX.Element => {
                                     ? categoriesOptions.data.list
                                     : []
                             }
-                            initialValue={selection}
-                            setState={setSelection}
+                            initialValue={selectedCategory}
+                            setState={setCategorySelection}
                         />
                         <button onClick={() => dispatch(setPendingCategories())}>
                             Refrescar
@@ -94,8 +99,8 @@ const postReferenceTable = (): JSX.Element => {
                             </tr>
                         </thead>
                         <tbody>
-                            {selectedCategory ? (
-                                selectedCategory.postReferences.map((category, index) => (
+                            {selected ? (
+                                selected.postReferences.map((category, index) => (
                                     <TableRow key={category.postId} axisY={index}>
                                         <TableCell
                                             value={

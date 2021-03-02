@@ -4,6 +4,7 @@ import { Category } from '../persistence/categories';
 
 export interface CategoriesViewState {
     categories: AsyncOp<Category[], string>;
+    selectedCategory: string;
 }
 
 //ACTION TYPES
@@ -26,11 +27,17 @@ export type SetSuccessfulCategoriesAction = {
     data: Category[];
 };
 
+export type SetSelectedCategory = {
+    type: 'setSelectedCategory';
+    category: string;
+};
+
 type SetCategoriesAction =
     | SetPendingCategoriesAction
     | SetOngoingCategoriesAction
     | SetFailedCategoriesAction
-    | SetSuccessfulCategoriesAction;
+    | SetSuccessfulCategoriesAction
+    | SetSelectedCategory;
 
 //ACTIONS
 
@@ -43,13 +50,22 @@ export const setOngoingCategories = (): SetOngoingCategoriesAction => {
 export const setFailedCategories = (error: string): SetFailedCategoriesAction => {
     return { type: 'setFailedCategories', error: error };
 };
-export const setSuccessfulCategories = (data: Category[]): SetSuccessfulCategoriesAction => {
+export const setSuccessfulCategories = (
+    data: Category[]
+): SetSuccessfulCategoriesAction => {
     return { type: 'setSuccessfulCategories', data };
+};
+
+export const setSelectedCategory = (category: string): SetSelectedCategory => {
+    return { type: 'setSelectedCategory', category: category };
 };
 
 //STATE AND REDUCER
 
-const initialState: CategoriesViewState = { categories: { status: 'pending' } };
+const initialState: CategoriesViewState = {
+    categories: { status: 'pending' },
+    selectedCategory: 'Todo',
+};
 
 function categoriesViewReducer(
     state = initialState,
@@ -70,6 +86,8 @@ function categoriesViewReducer(
             };
         case 'setSuccessfulCategories':
             return { ...state, categories: { status: 'successful', data: action.data } };
+        case 'setSelectedCategory':
+            return { ...state, selectedCategory: action.category };
         default:
             return state;
     }
