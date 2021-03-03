@@ -2,6 +2,7 @@
 @import '../../../style/variables.scss';
 
 .timeline {
+    @include flex-complete($direction: column, $justify: flex-start, $align: center);
     margin: 0;
     @media only screen and (min-width: $tablet) {
         width: 100%;
@@ -10,7 +11,7 @@
     }
 }
 
-.notice{
+.notice {
     padding: 16px;
     background-color: white;
     border-radius: 8px;

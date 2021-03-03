@@ -3,18 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 
 //reducer actions
+import { setCommentSectionClose } from '../../../redux/commentSectionReducer';
 import {
-    setCommentSectionClose,
-} from '../../../redux/commentSectionReducer';
-import {
-    setOngoingPost,
     setSuccessfulPost,
-    setFailedPost,
     setPendingPost,
 } from '../../../redux/viewerViewReducer';
 
 //persistence
-import { getPost } from '../../../persistence/posts';
+import { getRealtimePost, Post } from '../../../persistence/posts';
 
 //components
 import Loader from '../../components/loader';
@@ -44,18 +40,13 @@ const Viewer = (): JSX.Element => {
         }
     }, [sessionData.status]);
 
+    const setPostCallback = (data: Post) => {
+        dispatch(setSuccessfulPost(data));
+    };
+
     useEffect(() => {
-        const onGetPost = async () => {
-            dispatch(setOngoingPost());
-            const result = await getPost(params.postId);
-            if (typeof result === 'string') {
-                dispatch(setFailedPost(result));
-            } else {
-                dispatch(setSuccessfulPost(result));
-            }
-        };
         if (post.status === 'pending') {
-            onGetPost();
+            getRealtimePost(params.postId, setPostCallback);
         }
 
         return function cleanUp() {
@@ -80,6 +71,7 @@ const Viewer = (): JSX.Element => {
                             key={params.postId}
                             sessionData={sessionData.data}
                             post={post.data}
+                            containedBy="viewer"
                         />
                     ) : null}
                     <CommentSection

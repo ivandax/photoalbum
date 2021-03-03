@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import {
     Comment as CommentIcon,
     EmojiPeople as EmojiPeopleIcon,
@@ -30,12 +31,14 @@ interface DisplayPostProps {
     key: string;
     post: Post;
     sessionData: UserWithId;
+    containedBy: string;
 }
 
 const DisplayPost = (props: DisplayPostProps): JSX.Element => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const commentSection = useSelector((state: State) => state.commentSection);
-    const { post, sessionData } = props;
+    const { post, sessionData, containedBy } = props;
 
     const [photoSrc, setPhotoSrc] = useState<GetPhotoOp>({ status: 'pending' });
     const [displayPostActions, setDisplayPostActions] = useState(false);
@@ -43,6 +46,15 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
 
     const handleDeletePost = () => {
         setIsOpenConfirmationModal(true);
+    };
+
+    const handleConfirmDeletion = (): void => {
+        if (containedBy === 'viewer') {
+            deletePost(post.postId, post.fileName);
+            history.push('/categories');
+        } else {
+            deletePost(post.postId, post.fileName);
+        }
     };
 
     useEffect(() => {
@@ -136,10 +148,10 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                         actionConfirmation="Sí, borrar"
                         confirmationCallback={() => {
                             removePostReferenceFromAllCategories(
-                                [...post.categories, 'Todo'],//we also remove from All by default
+                                [...post.categories, 'Todo'], //we also remove from All by default
                                 post.postId
                             );
-                            deletePost(post.postId, post.fileName);
+                            handleConfirmDeletion();
                         }}
                     />
                 </div>

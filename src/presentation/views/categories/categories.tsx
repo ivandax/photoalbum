@@ -6,7 +6,7 @@ import { Add as AddIcon } from '@material-ui/icons';
 //components
 import Loader from '../../components/loader';
 import CreateCategory from '../../components/createCategory';
-import PostReferenceTable from '../../components/photoReferenceTable';
+import PostReferenceTable from '../../components/postReferenceTable';
 
 //hooks
 import useResetHeaderToggle from '../../../customHooks/useResetHeaderToggle';

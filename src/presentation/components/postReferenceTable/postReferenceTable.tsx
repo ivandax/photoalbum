@@ -14,7 +14,7 @@ import { getCategories } from '../../../persistence/categories';
 
 import { State } from '../../../redux/index';
 
-import Loader from '../../components/loader';
+import Loader from '../loader';
 import TableCell from '../tableCell';
 import TableHeader from '../tableHeader';
 import TableRow from '../tableRow';

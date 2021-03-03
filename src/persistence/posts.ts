@@ -225,15 +225,20 @@ const deleteComment = async (commentId: string, postId: string): Promise<void> =
     }
 };
 
-async function getPost(id: string): Promise<Post | string> {
+async function getRealtimePost(
+    id: string,
+    setPostState: (data: Post) => void
+): Promise<void | string> {
     const db = getDbInstance();
     try {
-        const doc = await db
-            .collection('posts')
+        db.collection('posts')
             .doc(id)
-            .get()
-            .then((doc) => parsePost(doc));
-        return doc ? doc : 'Error parseando el post';
+            .onSnapshot((doc) => {
+                const parsed = parsePost(doc);
+                if (parsed) {
+                    setPostState(parsed);
+                }
+            });
     } catch (e) {
         return `Error cargando el post - ${e.message}`;
     }
@@ -248,5 +253,5 @@ export {
     addComment,
     deleteComment,
     deletePost,
-    getPost,
+    getRealtimePost,
 };

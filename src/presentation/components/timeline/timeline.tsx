@@ -40,6 +40,7 @@ const Timeline = (props: TimelineProps): JSX.Element => {
                         key={post.postId}
                         post={post}
                         sessionData={sessionData}
+                        containedBy="timeline"
                     />
                 ))
             ) : (
