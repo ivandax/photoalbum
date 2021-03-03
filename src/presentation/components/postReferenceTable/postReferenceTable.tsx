@@ -3,14 +3,12 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
-    setOngoingCategories,
     setSuccessfulCategories,
-    setFailedCategories,
     setPendingCategories,
     setSelectedCategory,
 } from '../../../redux/categoryViewReducer';
 
-import { getCategories } from '../../../persistence/categories';
+import { getRealTimeCategories, Category } from '../../../persistence/categories';
 
 import { State } from '../../../redux/index';
 
@@ -35,18 +33,13 @@ const postReferenceTable = (): JSX.Element => {
         dispatch(setSelectedCategory(category));
     };
 
+    const setCategoriesCallback = (data: Category[]) => {
+        dispatch(setSuccessfulCategories(data));
+    };
+
     useEffect(() => {
-        const onGetCategories = async () => {
-            dispatch(setOngoingCategories());
-            const result = await getCategories();
-            if (typeof result === 'string') {
-                dispatch(setFailedCategories(result));
-            } else {
-                dispatch(setSuccessfulCategories(result));
-            }
-        };
         if (categories.status === 'pending') {
-            onGetCategories();
+            getRealTimeCategories(setCategoriesCallback);
         }
     }, [categories.status]);
 

@@ -244,10 +244,29 @@ async function getCategories(): Promise<Category[] | string> {
     }
 }
 
+function getRealTimeCategories(setCategoriesState: (data: Category[]) => void): void {
+    console.log('getting realtime categories');
+    const db = getDbInstance();
+    db.collection('categories')
+        .orderBy('createdOn', 'desc')
+        .onSnapshot((querySnapshop) => {
+            const categories = querySnapshop.docs.reduce((soFar: Category[], docSnap) => {
+                const parsed = parseCategory(docSnap);
+                if (parsed) {
+                    return [...soFar, parsed];
+                } else {
+                    return soFar;
+                }
+            }, []);
+            setCategoriesState(categories);
+        });
+}
+
 export {
     getCategoriesArray,
     addCategory,
     addPostReferenceToAllCategories,
     removePostReferenceFromAllCategories,
     getCategories,
+    getRealTimeCategories,
 };
