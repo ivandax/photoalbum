@@ -10,6 +10,13 @@
     @media only screen and (min-width: $tablet) {
         margin: 20px 0 24px 0;
         width: 280px;
+        &.landscape {
+            width: 350px;
+            margin: 20px 10px 24px 10px;
+        }
+        &.portrait {
+            width: 230px;
+        }
     }
 
     .postLoader {
@@ -26,10 +33,25 @@
     }
 
     .figureContainer {
-        figure {
-            max-width: 280px;
+        @media only screen and (min-width: $tablet) {
+            width: 280px;
+            &.landscape {
+                width: 350px;
+            }
+            &.portrait {
+                width: 230px;
+            }
+        }
+        .figure {
+            width: 280px;
             @media only screen and (min-width: $tablet) {
-                max-width: 500px;
+                width: 280px;
+                &.landscape {
+                    width: 350px;
+                }
+                &.portrait {
+                    width: 230px;
+                }
             }
             @include flex-complete($direction: column, $justify: center, $align: center);
             .postImage {
@@ -37,6 +59,12 @@
                 padding: 4px;
                 @media only screen and (min-width: $tablet) {
                     width: 280px;
+                    &.landscape {
+                        width: 350px;
+                    }
+                    &.portrait {
+                        width: 230px;
+                    }
                 }
             }
             figcaption {

@@ -79,19 +79,31 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
     }, [post.comments.length]);
 
     return (
-        <div className="displayPost">
+        <div
+            className={`displayPost ${post.aspectRatio >= 1 ? 'landscape' : 'portrait'}`}
+        >
             {photoSrc.status === 'pending' || photoSrc.status === 'ongoing' ? (
                 <div className="postLoader">
                     <div>Cargando...</div>
                 </div>
             ) : null}
             {photoSrc.status === 'successful' ? (
-                <div className="figureContainer">
-                    <figure>
+                <div
+                    className={`figureContainer ${
+                        post.aspectRatio >= 1 ? 'landscape' : 'portrait'
+                    }`}
+                >
+                    <figure
+                        className={`figure ${
+                            post.aspectRatio >= 1 ? 'landscape' : 'portrait'
+                        }`}
+                    >
                         <img
                             alt={post.title === '' ? post.postedByName : post.title}
                             src={photoSrc.data}
-                            className="postImage"
+                            className={`postImage ${
+                                post.aspectRatio >= 1 ? 'landscape' : 'portrait'
+                            }`}
                         />
                         <figcaption>{post.title}</figcaption>
                         <span>Publicado por {post.postedByName}</span>
