@@ -80,7 +80,9 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
 
     return (
         <div
-            className={`displayPost ${post.aspectRatio >= 1 ? 'landscape' : 'portrait'}`}
+            className={`displayPost ${post.aspectRatio >= 1 ? 'landscape' : 'portrait'} ${
+                containedBy === 'viewer' ? 'singleView' : ''
+            }`}
         >
             {photoSrc.status === 'pending' || photoSrc.status === 'ongoing' ? (
                 <div className="postLoader">
@@ -91,19 +93,19 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                 <div
                     className={`figureContainer ${
                         post.aspectRatio >= 1 ? 'landscape' : 'portrait'
-                    }`}
+                    } ${containedBy === 'viewer' ? 'singleView' : ''}`}
                 >
                     <figure
                         className={`figure ${
                             post.aspectRatio >= 1 ? 'landscape' : 'portrait'
-                        }`}
+                        } ${containedBy === 'viewer' ? 'singleView' : ''}`}
                     >
                         <img
                             alt={post.title === '' ? post.postedByName : post.title}
                             src={photoSrc.data}
                             className={`postImage ${
                                 post.aspectRatio >= 1 ? 'landscape' : 'portrait'
-                            }`}
+                            } ${containedBy === 'viewer' ? 'singleView' : ''}`}
                         />
                         <figcaption>{post.title}</figcaption>
                         <span>Publicado por {post.postedByName}</span>
