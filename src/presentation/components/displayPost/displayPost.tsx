@@ -115,15 +115,13 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                             <EmojiPeopleIcon />
                             <span>{post.comments.length}</span>
                         </div>
-                        {(sessionData.isAdmin || post.postedBy === sessionData.id) &&
-                        displayPostActions === false ? (
+                        {displayPostActions === false ? (
                             <ArrowDownIcon
                                 className="arrowIcon"
                                 onClick={() => setDisplayPostActions(!displayPostActions)}
                             />
                         ) : null}
-                        {(sessionData.isAdmin || post.postedBy === sessionData.id) &&
-                        displayPostActions === true ? (
+                        {displayPostActions === true ? (
                             <ArrowUpIcon
                                 className="arrowIcon"
                                 onClick={() => setDisplayPostActions(!displayPostActions)}
@@ -144,7 +142,14 @@ const DisplayPost = (props: DisplayPostProps): JSX.Element => {
                             ))}
                         </p>
                     </div>
-                    <div className={`postActions ${displayPostActions ? 'show' : ''}`}>
+                    <div
+                        className={`postActions ${
+                            displayPostActions &&
+                            (sessionData.isAdmin || post.postedBy === sessionData.id)
+                                ? 'show'
+                                : ''
+                        }`}
+                    >
                         <button onClick={handleDeletePost} className="deletePostButton">
                             Borrar
                         </button>
