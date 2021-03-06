@@ -1,11 +1,10 @@
-import { Post, FirstAndLastPost } from '../persistence/posts';
-import * as O from 'fp-ts/lib/Option';
+import { Post, PageCursors } from '../persistence/posts';
 
 //STATE
 
 export interface HomeViewState {
     posts: AsyncOp<Post[], string>;
-    firstAndLastPost: FirstAndLastPost;
+    pageCursors: PageCursors;
     currentPage: number;
 }
 
@@ -29,9 +28,9 @@ export type SetSuccessfulPostsAction = {
     data: Post[];
 };
 
-export type SetFirstAndLastPostAction = {
-    type: 'setFirstAndLastPost';
-    firstAndLast: FirstAndLastPost;
+export type SetPageCursorsAction = {
+    type: 'setPageCursors';
+    pageCursors: PageCursors;
 };
 
 export type SetCurrentPageAction = {
@@ -44,7 +43,7 @@ type SetPostsAction =
     | SetOngoingPostsAction
     | SetFailedPostsAction
     | SetSuccessfulPostsAction
-    | SetFirstAndLastPostAction
+    | SetPageCursorsAction
     | SetCurrentPageAction;
 
 //ACTIONS
@@ -61,10 +60,8 @@ export const setFailedPosts = (error: string): SetFailedPostsAction => {
 export const setSuccessfulPosts = (data: Post[]): SetSuccessfulPostsAction => {
     return { type: 'setSuccessfulPosts', data };
 };
-export const setLastPost = (
-    firstAndLast: FirstAndLastPost
-): SetFirstAndLastPostAction => {
-    return { type: 'setFirstAndLastPost', firstAndLast };
+export const setLastPost = (pageCursors: PageCursors): SetPageCursorsAction => {
+    return { type: 'setPageCursors', pageCursors };
 };
 export const setCurrentPage = (page: number): SetCurrentPageAction => {
     return { type: 'setCurrentPage', page };
@@ -74,7 +71,7 @@ export const setCurrentPage = (page: number): SetCurrentPageAction => {
 
 const initialState: HomeViewState = {
     posts: { status: 'pending' },
-    firstAndLastPost: { first: O.none, last: O.none },
+    pageCursors: {},
     currentPage: 1,
 };
 
@@ -94,13 +91,10 @@ function homeViewReducer(state = initialState, action: SetPostsAction): HomeView
             };
         case 'setSuccessfulPosts':
             return { ...state, posts: { status: 'successful', data: action.data } };
-        case 'setFirstAndLastPost':
+        case 'setPageCursors':
             return {
                 ...state,
-                firstAndLastPost: {
-                    first: action.firstAndLast.first,
-                    last: action.firstAndLast.last,
-                },
+                pageCursors: action.pageCursors,
             };
         case 'setCurrentPage':
             return { ...state, currentPage: action.page };

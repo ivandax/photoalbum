@@ -24,7 +24,12 @@
 }
 
 .pagination {
+    margin-top: 8px;
     margin-bottom: 16px;
+    @media only screen and (min-width: $tablet) {
+        margin-top: 16px;
+        margin-bottom: 32px;
+    }
     @include flex-complete($direction: row, $justify: center, $align: center);
     button {
         color: white;
@@ -33,7 +38,7 @@
         border-radius: 4px;
         background-color: $darkblue;
     }
-    div{
+    div {
         padding: 8px;
     }
 }

@@ -1,8 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
-import * as O from 'fp-ts/lib/Option';
-import { pipe } from 'fp-ts/pipeable';
 
 //Interfaces
 
@@ -33,10 +31,7 @@ export interface Post {
 
 export type FirestoreDocument = firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>;
 
-export interface FirstAndLastPost {
-    first: O.Option<FirestoreDocument>;
-    last: O.Option<FirestoreDocument>;
-}
+export type PageCursors = Record<string, FirestoreDocument[]>;
 
 //Functions
 
@@ -161,59 +156,21 @@ async function getPosts(): Promise<Post[] | string> {
     }
 }
 
-function getNextRealTimePosts(
-    setPostsState: (data: Post[]) => void,
-    setFirstAndLastPostState: (last: FirstAndLastPost) => void,
-    firstAndLast: FirstAndLastPost
-): void {
-    pipe(
-        firstAndLast.last,
-        O.fold(
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            () => {},
-            (docRef) => {
-                getDbInstance()
-                    .collection('posts')
-                    .orderBy('createdOn', 'desc')
-                    .startAfter(docRef)
-                    .limit(3)
-                    .onSnapshot((querySnapshop) => {
-                        setFirstAndLastPostState({
-                            first: O.some(querySnapshop.docs[0]),
-                            last: O.some(
-                                querySnapshop.docs[querySnapshop.docs.length - 1]
-                            ),
-                        });
-                        const posts = querySnapshop.docs.reduce(
-                            (soFar: Post[], docSnap) => {
-                                const parsed = parsePost(docSnap);
-                                if (parsed) {
-                                    return [...soFar, parsed];
-                                } else {
-                                    return soFar;
-                                }
-                            },
-                            []
-                        );
-                        setPostsState(posts);
-                    });
-            }
-        )
-    );
-}
+const postsPerPage = 10;
 
 function getInitialRealTimePosts(
     setPostsState: (data: Post[]) => void,
-    setFirstAndLastPostState: (last: FirstAndLastPost) => void
+    setPageCursorsState: (last: PageCursors) => void,
+    pageCursors: PageCursors
 ): void {
     getDbInstance()
         .collection('posts')
         .orderBy('createdOn', 'desc')
-        .limit(3)
+        .limit(postsPerPage)
         .onSnapshot((querySnapshop) => {
-            setFirstAndLastPostState({
-                first: O.some(querySnapshop.docs[0]),
-                last: O.some(querySnapshop.docs[querySnapshop.docs.length - 1]),
+            setPageCursorsState({
+                ...pageCursors,
+                page1: querySnapshop.docs,
             });
             const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {
                 const parsed = parsePost(docSnap);
@@ -225,6 +182,65 @@ function getInitialRealTimePosts(
             }, []);
             setPostsState(posts);
         });
+}
+
+function getNextRealTimePosts(
+    setPostsState: (data: Post[]) => void,
+    setPageCursorsState: (last: PageCursors) => void,
+    setPageNumberState: (pageNumber: number) => void,
+    pageCursors: PageCursors,
+    currentPage: number
+): void {
+    const postRefs = pageCursors[`page${currentPage}`];
+    getDbInstance()
+        .collection('posts')
+        .orderBy('createdOn', 'desc')
+        .startAfter(postRefs[postRefs.length - 1])
+        .limit(postsPerPage)
+        .onSnapshot((querySnapshop) => {
+            setPageCursorsState({
+                ...pageCursors,
+                [`page${currentPage + 1}`]: querySnapshop.docs,
+            });
+            setPageNumberState(currentPage + 1);
+            const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {
+                const parsed = parsePost(docSnap);
+                if (parsed) {
+                    return [...soFar, parsed];
+                } else {
+                    return soFar;
+                }
+            }, []);
+            setPostsState(posts);
+        });
+}
+
+function getPreviousRealTimePosts(
+    setPostsState: (data: Post[]) => void,
+    setPageNumberState: (pageNumber: number) => void,
+    pageCursors: PageCursors,
+    currentPage: number
+): void {
+    if (currentPage > 1) {
+        const previousPostRefs = pageCursors[`page${currentPage - 1}`];
+        getDbInstance()
+            .collection('posts')
+            .orderBy('createdOn', 'desc')
+            .startAt(previousPostRefs[0])
+            .limit(postsPerPage)
+            .onSnapshot((querySnapshop) => {
+                setPageNumberState(currentPage - 1);
+                const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {
+                    const parsed = parsePost(docSnap);
+                    if (parsed) {
+                        return [...soFar, parsed];
+                    } else {
+                        return soFar;
+                    }
+                }, []);
+                setPostsState(posts);
+            });
+    }
 }
 
 const deletePost = async (id: string, fileName: string): Promise<void | string> => {
@@ -310,5 +326,6 @@ export {
     deletePost,
     getInitialRealTimePosts,
     getNextRealTimePosts,
+    getPreviousRealTimePosts,
     getRealtimePost,
 };
