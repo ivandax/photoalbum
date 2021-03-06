@@ -1,9 +1,12 @@
-import { Post } from '../persistence/posts';
+import { Post, FirstAndLastPost } from '../persistence/posts';
+import * as O from 'fp-ts/lib/Option';
 
 //STATE
 
 export interface HomeViewState {
     posts: AsyncOp<Post[], string>;
+    firstAndLastPost: FirstAndLastPost;
+    currentPage: number;
 }
 
 //ACTION TYPES
@@ -26,11 +29,23 @@ export type SetSuccessfulPostsAction = {
     data: Post[];
 };
 
+export type SetFirstAndLastPostAction = {
+    type: 'setFirstAndLastPost';
+    firstAndLast: FirstAndLastPost;
+};
+
+export type SetCurrentPageAction = {
+    type: 'setCurrentPage';
+    page: number;
+};
+
 type SetPostsAction =
     | SetPendingPostsAction
     | SetOngoingPostsAction
     | SetFailedPostsAction
-    | SetSuccessfulPostsAction;
+    | SetSuccessfulPostsAction
+    | SetFirstAndLastPostAction
+    | SetCurrentPageAction;
 
 //ACTIONS
 
@@ -46,15 +61,24 @@ export const setFailedPosts = (error: string): SetFailedPostsAction => {
 export const setSuccessfulPosts = (data: Post[]): SetSuccessfulPostsAction => {
     return { type: 'setSuccessfulPosts', data };
 };
+export const setLastPost = (
+    firstAndLast: FirstAndLastPost
+): SetFirstAndLastPostAction => {
+    return { type: 'setFirstAndLastPost', firstAndLast };
+};
+export const setCurrentPage = (page: number): SetCurrentPageAction => {
+    return { type: 'setCurrentPage', page };
+};
 
 //STATE AND REDUCER
 
-const initialState: HomeViewState = { posts: { status: 'pending' } };
+const initialState: HomeViewState = {
+    posts: { status: 'pending' },
+    firstAndLastPost: { first: O.none, last: O.none },
+    currentPage: 1,
+};
 
-function homeViewReducer(
-    state = initialState,
-    action: SetPostsAction
-): HomeViewState {
+function homeViewReducer(state = initialState, action: SetPostsAction): HomeViewState {
     switch (action.type) {
         case 'setPendingPosts':
             return { ...state, posts: { status: 'pending' } };
@@ -70,6 +94,16 @@ function homeViewReducer(
             };
         case 'setSuccessfulPosts':
             return { ...state, posts: { status: 'successful', data: action.data } };
+        case 'setFirstAndLastPost':
+            return {
+                ...state,
+                firstAndLastPost: {
+                    first: action.firstAndLast.first,
+                    last: action.firstAndLast.last,
+                },
+            };
+        case 'setCurrentPage':
+            return { ...state, currentPage: action.page };
         default:
             return state;
     }

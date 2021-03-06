@@ -22,3 +22,18 @@
         text-align: center;
     }
 }
+
+.pagination {
+    margin-bottom: 16px;
+    @include flex-complete($direction: row, $justify: center, $align: center);
+    button {
+        color: white;
+        padding: 4px;
+        border: none;
+        border-radius: 4px;
+        background-color: $darkblue;
+    }
+    div{
+        padding: 8px;
+    }
+}

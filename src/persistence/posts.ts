@@ -1,6 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
+import * as O from 'fp-ts/lib/Option';
+import { pipe } from 'fp-ts/pipeable';
 
 //Interfaces
 
@@ -27,6 +29,13 @@ export interface Post {
     //picPreview: string;
     //fileUrl: string;
     //storageBucket: string;
+}
+
+export type FirestoreDocument = firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>;
+
+export interface FirstAndLastPost {
+    first: O.Option<FirestoreDocument>;
+    last: O.Option<FirestoreDocument>;
 }
 
 //Functions
@@ -152,13 +161,60 @@ async function getPosts(): Promise<Post[] | string> {
     }
 }
 
-function getRealTimePosts(setPostsState: (data: Post[]) => void): void {
-    console.log('getting realtime posts');
-    const db = getDbInstance();
-    db.collection('posts')
+function getNextRealTimePosts(
+    setPostsState: (data: Post[]) => void,
+    setFirstAndLastPostState: (last: FirstAndLastPost) => void,
+    firstAndLast: FirstAndLastPost
+): void {
+    pipe(
+        firstAndLast.last,
+        O.fold(
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            () => {},
+            (docRef) => {
+                getDbInstance()
+                    .collection('posts')
+                    .orderBy('createdOn', 'desc')
+                    .startAfter(docRef)
+                    .limit(3)
+                    .onSnapshot((querySnapshop) => {
+                        setFirstAndLastPostState({
+                            first: O.some(querySnapshop.docs[0]),
+                            last: O.some(
+                                querySnapshop.docs[querySnapshop.docs.length - 1]
+                            ),
+                        });
+                        const posts = querySnapshop.docs.reduce(
+                            (soFar: Post[], docSnap) => {
+                                const parsed = parsePost(docSnap);
+                                if (parsed) {
+                                    return [...soFar, parsed];
+                                } else {
+                                    return soFar;
+                                }
+                            },
+                            []
+                        );
+                        setPostsState(posts);
+                    });
+            }
+        )
+    );
+}
+
+function getInitialRealTimePosts(
+    setPostsState: (data: Post[]) => void,
+    setFirstAndLastPostState: (last: FirstAndLastPost) => void
+): void {
+    getDbInstance()
+        .collection('posts')
         .orderBy('createdOn', 'desc')
-        .limit(30)
+        .limit(3)
         .onSnapshot((querySnapshop) => {
+            setFirstAndLastPostState({
+                first: O.some(querySnapshop.docs[0]),
+                last: O.some(querySnapshop.docs[querySnapshop.docs.length - 1]),
+            });
             const posts = querySnapshop.docs.reduce((soFar: Post[], docSnap) => {
                 const parsed = parsePost(docSnap);
                 if (parsed) {
@@ -249,9 +305,10 @@ export {
     uploadFile,
     getPostImage,
     getPosts,
-    getRealTimePosts,
     addComment,
     deleteComment,
     deletePost,
+    getInitialRealTimePosts,
+    getNextRealTimePosts,
     getRealtimePost,
 };
