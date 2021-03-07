@@ -159,7 +159,7 @@ async function getPosts(): Promise<Post[] | string> {
 const postsPerPage = 10;
 
 function firstAndLast(array: FirestoreDocument[]): FirestoreDocument[] {
-    return [array[0], array[array.length - 1]];
+    return array.length === 0 ? [] : [array[0], array[array.length - 1]];
 }
 
 function getInitialRealTimePosts(

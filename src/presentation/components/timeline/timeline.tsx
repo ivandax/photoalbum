@@ -29,9 +29,9 @@ import { State } from '../../../redux/index';
 import './timeline.scss';
 
 interface PaginationProps {
+    changePreviousPageCallback: () => void;
     pageValue: number;
     changeNextPageCallback: () => void;
-    changePreviousPageCallback: () => void;
 }
 
 const Pagination = (props: PaginationProps): JSX.Element => {
@@ -99,24 +99,26 @@ const Timeline = (props: TimelineProps): JSX.Element => {
                 )}
             </div>
             <Pagination
+                changePreviousPageCallback={() => {
+                    window.scrollTo(0, 0);
+                    getPreviousRealTimePosts(
+                        setPostsCallback,
+                        setPageNumberCallback,
+                        pageCursors,
+                        currentPage
+                    );
+                }}
                 pageValue={currentPage}
-                changeNextPageCallback={() =>
+                changeNextPageCallback={() => {
+                    window.scrollTo(0, 0);
                     getNextRealTimePosts(
                         setPostsCallback,
                         setPageCursorsCallback,
                         setPageNumberCallback,
                         pageCursors,
                         currentPage
-                    )
-                }
-                changePreviousPageCallback={() =>
-                    getPreviousRealTimePosts(
-                        setPostsCallback,
-                        setPageNumberCallback,
-                        pageCursors,
-                        currentPage
-                    )
-                }
+                    );
+                }}
             />
         </>
     );
