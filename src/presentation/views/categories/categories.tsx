@@ -43,13 +43,15 @@ const Categories = (): JSX.Element => {
                             onClose={() => setOpenCreateCategory(false)}
                         />
                         <PostReferenceTable />
-                        {sessionData.data.isAdmin ? (
-                            <div className="categoriesToolbar">
+                        <div className="categoriesToolbar">
+                            {sessionData.data.isAdmin ? (
                                 <button onClick={() => setOpenCreateCategory(true)}>
                                     <AddIcon />
                                 </button>
-                            </div>
-                        ) : null}
+                            ) : (
+                                <div className="spacer"></div>
+                            )}
+                        </div>
                     </div>
                 </div>
             ) : (
