@@ -6,7 +6,7 @@
     margin: 0;
     @media only screen and (min-width: $tablet) {
         width: 100%;
-        @include flex-complete($direction: row, $justify: space-around, $align: center);
+        @include flex-complete($direction: row, $justify: space-evenly, $align: center);
         flex-wrap: wrap;
     }
 }
