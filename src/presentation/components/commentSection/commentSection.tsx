@@ -138,7 +138,8 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
                         )
                     )
                 )}
-                <form className="commentInput" onSubmit={handleSaveComment}>
+            </div>
+            <form className="commentInput" onSubmit={handleSaveComment}>
                     <textarea
                         placeholder="Comentar..."
                         value={pipe(
@@ -155,7 +156,6 @@ const CommentSection = (props: CommentSectionProps): JSX.Element => {
                         Guardar
                     </button>
                 </form>
-            </div>
         </div>
     );
 };
