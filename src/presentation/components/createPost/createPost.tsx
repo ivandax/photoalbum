@@ -4,6 +4,8 @@ import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
 import { flow } from 'fp-ts/lib/function';
 import { Select, Checkbox, ListItemText, MenuItem, Input } from '@material-ui/core';
+import ReactCrop, { Crop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 import { UserWithId } from '../../../persistence/users';
 import { uploadFile, addPost, Post } from '../../../persistence/posts';
@@ -47,6 +49,14 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
     const [localUpdateProcess, setLocalUpdateProcess] = useState('resolved');
     const [categories, setCategories] = React.useState<string[]>([]);
 
+    //image cropping
+    const initialCrop: Crop = { unit: '%', width: 100, height: 100 };
+    const [cropped, setCropped] = useState<Crop>(initialCrop);
+    const handleCrop = (crop: Crop) => {
+        setCropped(crop);
+        console.log(cropped);
+    };
+
     const handleCleanUpAndClose = (): void => {
         setOnePhotoMessage(O.none);
         setOnePhotoPreview(O.none);
@@ -55,6 +65,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
         setLocalUpdateProcess('resolved');
         setCategories([]);
         onClose();
+        setCropped(initialCrop);
     };
 
     const handleChangeCategories = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -78,6 +89,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                         O.some('No hemos podido leer la archivo como imagen')
                     ),
                 (fileOrUndefined) => {
+                    console.log(fileOrUndefined);
                     pipe(
                         O.fromNullable(fileOrUndefined),
                         O.map((file) => {
@@ -208,7 +220,7 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                         />
                         <label htmlFor="files">Subir foto</label>
                     </div>
-                    <div className="picPreview">
+                    {/* <div className="picPreview">
                         <img
                             src={pipe(
                                 onePhotoPreview,
@@ -218,7 +230,25 @@ const CreatePost = (props: CreatePostProps): JSX.Element => {
                             alt="image preview for post"
                             ref={imagePreviewRef}
                         />
-                    </div>
+                    </div> */}
+                    {pipe(
+                        onePhotoPreview,
+                        O.map((photoRef) => (
+                            // eslint-disable-next-line react/jsx-key
+                            <ReactCrop
+                                src={photoRef.base64}
+                                onChange={handleCrop}
+                                crop={cropped}
+                            />
+                        )),
+                        O.getOrElse(() => (
+                            <img
+                                src={placeholder}
+                                alt="image preview for post"
+                                ref={imagePreviewRef}
+                            />
+                        ))
+                    )}
                     {pipe(
                         onePhotoMessage,
                         O.fold(
