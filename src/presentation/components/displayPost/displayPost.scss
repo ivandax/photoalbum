@@ -57,21 +57,25 @@
                 width: 100%;
             }
             @media only screen and (min-width: $tablet) {
+                @include flex-complete($direction: column, $justify: flex-start, $align: center);
+                overflow: hidden;
                 width: 280px;
                 &.landscape {
                     width: 350px;
+                    max-height: 300px;
                     &.singleView{
                         width: 550px;
                     }
                 }
                 &.portrait {
                     width: 230px;
+                    max-height: 300px;
                     &.singleView{
                         width: 350px;
                     }
                 }
             }
-            @include flex-complete($direction: column, $justify: center, $align: center);
+
             .postImage {
                 width: 280px;
                 padding: 4px;
