@@ -1,13 +1,14 @@
 @import '../../../style/mixins.scss';
 @import '../../../style/variables.scss';
 
+
 .timeline {
     @include flex-complete($direction: column, $justify: flex-start, $align: center);
     margin: 0;
     @media only screen and (min-width: $tablet) {
+        @include flex-complete($direction: row, $justify: flex-start, $align: flex-start);
+        overflow-x: scroll;
         width: 100%;
-        @include flex-complete($direction: row, $justify: space-evenly, $align: center);
-        flex-wrap: wrap;
     }
 }
 
@@ -28,7 +29,6 @@
     margin-bottom: 16px;
     @media only screen and (min-width: $tablet) {
         margin-top: 16px;
-        margin-bottom: 32px;
     }
     @include flex-complete($direction: row, $justify: center, $align: center);
     button {

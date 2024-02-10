@@ -41,7 +41,7 @@ const Pagination = (props: PaginationProps): JSX.Element => {
             <button disabled={pageValue <= 1} onClick={changePreviousPageCallback}>
                 <NavigateBeforeIcon />
             </button>
-            <div>{pageValue}</div>
+            <div>{"Pagina: "}{pageValue}</div>
             <button onClick={changeNextPageCallback}>
                 <NavigateNextIcon />
             </button>
@@ -98,6 +98,7 @@ const Timeline = (props: TimelineProps): JSX.Element => {
                     <div className="notice">No hemos obtenido ningun post</div>
                 )}
             </div>
+
             <Pagination
                 changePreviousPageCallback={() => {
                     window.scrollTo(0, 0);
